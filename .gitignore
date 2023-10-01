@@ -5,10 +5,10 @@ node_modules
 /build
 /.svelte-kit
 /package
-.env
+.env.prod
 .env.*
+!.env
 !.env.example
 vite.config.js.timestamp-*
-
 vite.config.ts.timestamp-*
 compose.prod.yml
