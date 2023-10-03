@@ -8,10 +8,10 @@
 
 <div class="content">
 	<p class="greeting">
-		Your message by {data.message.sender}:
+		Your message by {data.message.senderName}:
 	</p>
 	<p class="message">
-		{data.message.content}
+		{data.message.messageContent}
 	</p>
 	<button on:click={() => (showModal = true)}>Share your own idea</button>
 	<SendMessageModal bind:showModal>

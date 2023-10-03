@@ -3,37 +3,45 @@ package controllers
 import (
 	"database/sql"
 	"log"
+	"messageinabottle/models/compounds"
+
 	"github.com/gofiber/fiber/v2"
-  "messageinabottle/models"
 )
 
 func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
-  message := models.Message{}
-  row  := db.QueryRow("SELECT id, content, sender, timestamp FROM message ORDER BY timestamp DESC")
+	message := compounds.UserMessage{}
 
-  err := row.Scan(&message.ID, &message.Content, &message.Sender, &message.Timestamp)
-  if err != nil {
-    log.Fatalln("No rows returned.")
-  }
+	row := db.QueryRow("SELECT m.id, m.content, m.timestamp, u.id, u.username FROM Message m JOIN User_ u ON m.sender = u.id ORDER BY timestamp DESC")
+	err := row.Scan(&message.MessageID, &message.Content, &message.Timestamp, &message.SenderID, &message.SenderName)
 
-  return c.JSON(message)
+	if err != nil {
+		log.Fatalln("No rows returned.")
+		return c.Status(500).JSON("error fetching from database")
+	}
+
+	return c.JSON(message)
 }
 
 func UpdateHandler(c *fiber.Ctx, db *sql.DB) error {
-  message := models.Message{}
+	message := compounds.UserMessage{}
 
-  if err := c.BodyParser(&message); err != nil {
-    return c.Status(400).JSON(err.Error())
-  }
+	if err := c.BodyParser(&message); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
 
-  statement := `INSERT INTO message (content, sender, timestamp) 
-                VALUES ($1, $2, CURRENT_TIMESTAMP)`
+	userStatement := `INSERT INTO User_ (username)
+		                VALUES ($1)`
+	_, err := db.Exec(userStatement, message.SenderName)
+	if err != nil {
+		return c.Status(400).JSON("Could not insert into database.")
+	}
 
-  _, err := db.Exec(statement, message.Content, message.Sender)
+	messageStatement := `INSERT INTO Message (content, sender, timestamp)
+		                VALUES ($1, (SELECT id FROM User_ WHERE username = $2), CURRENT_TIMESTAMP)`
+	_, err = db.Exec(messageStatement, message.Content, message.SenderName)
+	if err != nil {
+		return c.Status(400).JSON("Could not insert into database.")
+	}
 
-  if err != nil {
-    return c.Status(400).JSON("Could not insert into database.")
-  }
-
-  return c.Status(200).JSON("Message sent successfully.")
+	return c.Status(200).JSON("Message sent successfully.")
 }

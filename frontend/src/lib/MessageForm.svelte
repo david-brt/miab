@@ -10,7 +10,7 @@
 	/>
 	<label for="sender-input" class="form-label">name</label>
 	<input
-		name="sender"
+		name="senderName"
 		id="sender-input"
 		type="text"
 		placeholder="your name"
