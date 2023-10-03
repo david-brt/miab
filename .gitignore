@@ -4,6 +4,7 @@ tmp
 node_modules
 /build
 /.svelte-kit
+.svelte-kit
 /package
 .env.prod
 .env.*
