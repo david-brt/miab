@@ -2,7 +2,8 @@
 CREATE TABLE
   User_ (
     id serial PRIMARY KEY,
-    username varchar(100) UNIQUE NOT NULL
+    username varchar(34) UNIQUE NOT NULL,
+    password_hash_salted varchar(72) NOT NULL
   );
 
 CREATE TABLE
@@ -15,9 +16,9 @@ CREATE TABLE
   );
 
 INSERT INTO
-  User_ (username)
+  User_ (username, password_hash_salted)
 VALUES
-  ('admin');
+  ('glumanda', 'not_a_hash');
 
 INSERT INTO
   Message (content, sender, timestamp)
@@ -30,7 +31,7 @@ VALUES
       FROM
         User_
       WHERE
-        username = 'admin'
+        username = 'glumanda'
     ),
     CURRENT_TIMESTAMP
   );
