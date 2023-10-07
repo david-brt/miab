@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"messageinabottle/dataaccess"
 	"messageinabottle/models"
 	"os"
 	"time"
@@ -15,6 +16,10 @@ func SignupHandler(c *fiber.Ctx, db *sql.DB) error {
 	user := models.User{}
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(500).JSON(err.Error())
+	}
+
+	if dataaccess.UserExists(db, user.Username) {
+		return c.Status(502).JSON("User already exists.")
 	}
 
 	cost := 12
