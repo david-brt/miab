@@ -1,11 +1,11 @@
 import { PUBLIC_DATA_ROUTE } from '$env/static/public';
 import type { LoadEvent } from '@sveltejs/kit';
-import type { UserMessage } from '../../types/userMessage';
+import type { Message } from '../../types/message';
 import type { Actions } from './$types';
 
 export async function load({ fetch }: LoadEvent) {
 	const response = await fetch(PUBLIC_DATA_ROUTE);
-	const message: UserMessage = await response.json();
+	const message: Message = await response.json();
 	return {
 		message
 	};
@@ -16,9 +16,9 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const jsonData = {
 			senderName: data.get('senderName'),
-			messageContent: data.get('content')
+			content: data.get('content')
 		};
-		const url = `${PUBLIC_DATA_ROUTE}/update`;
+		const url = `${PUBLIC_DATA_ROUTE}/insert-message`;
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {

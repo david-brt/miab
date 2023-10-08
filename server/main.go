@@ -31,8 +31,11 @@ func main() {
 	app.Get("/login", func(c *fiber.Ctx) error {
 		return controllers.LoginHandler(c, db)
 	})
-	app.Post("/update", func(c *fiber.Ctx) error {
-		return controllers.UpdateHandler(c, db)
+	app.Get("/verify-token", func(c *fiber.Ctx) error {
+		return controllers.VerifyTokenHandler(c)
+	})
+	app.Post("/insert-message", func(c *fiber.Ctx) error {
+		return controllers.InsertMessageHandler(c, db)
 	})
 	app.Post("/signup", func(c *fiber.Ctx) error {
 		return controllers.SignupHandler(c, db)

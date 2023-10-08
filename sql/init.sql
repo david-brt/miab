@@ -11,6 +11,7 @@ CREATE TABLE
     id serial PRIMARY KEY,
     content text NOT NULL,
     sender int,
+    sender_name varchar(34),
     timestamp timestamp NOT NULL,
     FOREIGN KEY (sender) REFERENCES User_ (id)
   );
@@ -21,7 +22,7 @@ VALUES
   ('glumanda', 'not_a_hash');
 
 INSERT INTO
-  Message (content, sender, timestamp)
+  Message (content, sender, sender_name, timestamp)
 VALUES
   (
     'init',
@@ -33,5 +34,6 @@ VALUES
       WHERE
         username = 'glumanda'
     ),
+    'glumanda',
     CURRENT_TIMESTAMP
   );

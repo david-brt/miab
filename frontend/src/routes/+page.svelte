@@ -11,7 +11,7 @@
 		Your message by {data.message.senderName}:
 	</p>
 	<p class="message">
-		{data.message.messageContent}
+		{data.message.content}
 	</p>
 	<button on:click={() => (showModal = true)}>Share your own idea</button>
 	<SendMessageModal bind:showModal>
