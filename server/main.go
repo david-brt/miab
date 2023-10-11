@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -31,14 +32,24 @@ func main() {
 	app.Get("/login", func(c *fiber.Ctx) error {
 		return controllers.LoginHandler(c, db)
 	})
-	app.Get("/verify-token", func(c *fiber.Ctx) error {
-		return controllers.VerifyTokenHandler(c)
-	})
+
 	app.Post("/insert-message", func(c *fiber.Ctx) error {
 		return controllers.InsertMessageHandler(c, db)
 	})
+
 	app.Post("/signup", func(c *fiber.Ctx) error {
 		return controllers.SignupHandler(c, db)
+	})
+
+	app.Use(jwtware.New(jwtware.Config{
+		SigningKey: jwtware.SigningKey{
+			Key:    []byte(os.Getenv("JWT_SECRET")),
+			JWTAlg: jwtware.HS256,
+		},
+	}))
+
+	app.Get("/verify-token", func(c *fiber.Ctx) error {
+		return controllers.VerifyTokenHandler(c)
 	})
 
 	port := os.Getenv("PORT")
