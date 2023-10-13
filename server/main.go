@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"log"
+  "github.com/gofiber/fiber/v2/middleware/logger"
 	"messageinabottle/controllers"
 	"messageinabottle/services"
 	"os"
@@ -25,6 +26,8 @@ func main() {
 	app := fiber.New()
 	connStr := "postgresql://postgres:postgres@db/messageinabottle?sslmode=disable"
 	db := services.ConnectDB(connStr)
+
+  app.Use(logger.New())
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return controllers.IndexHandler(c, db)
