@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SendMessageModal from '$lib/SendMessageModal.svelte';
+	import Modal from '$lib/Modal.svelte';
 	import MessageForm from '$lib/MessageForm.svelte';
 
 	let showModal = false;
@@ -14,9 +14,9 @@
 		{data.message.content}
 	</p>
 	<button on:click={() => (showModal = true)}>Share your own idea</button>
-	<SendMessageModal bind:showModal>
+	<Modal bind:showModal>
 		<MessageForm />
-	</SendMessageModal>
+	</Modal>
 </div>
 
 <style>
