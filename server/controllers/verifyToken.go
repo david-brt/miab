@@ -14,5 +14,7 @@ func VerifyTokenHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(user.Claims.(jwt.MapClaims))
+	return c.JSON(fiber.Map{
+    "claims": user.Claims,
+  })
 }
