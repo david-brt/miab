@@ -62,7 +62,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
-	return c.JSON(fiber.Map{
-    "auth-token": s,
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+    "auth_token": s,
   })
 }

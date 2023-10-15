@@ -27,7 +27,7 @@ export const actions: Actions = {
 			body: JSON.stringify(jsonData)
 		});
 	},
-	login: async ({ request }) => {
+	login: async ({ request, cookies }) => {
 		const data = await request.formData();
 		const jsonData = {
 			username: data.get('username'),
@@ -41,5 +41,9 @@ export const actions: Actions = {
 			},
 			body: JSON.stringify(jsonData)
 		});
+		if (response.status === 202) {
+			const { auth_token } = await response.json();
+			cookies.set('auth_token', auth_token);
+		}
 	}
 };
