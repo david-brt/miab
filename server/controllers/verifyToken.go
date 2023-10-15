@@ -10,8 +10,8 @@ func VerifyTokenHandler(c *fiber.Ctx) error {
 
 	if user == nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "User is not authenticated",
-		})
+      "info": "User not logged in",
+    })
 	}
 
 	return c.JSON(fiber.Map{

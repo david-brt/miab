@@ -16,10 +16,13 @@ func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
 	err := row.Scan(&message.ID, &message.Content, &sender, &message.SenderName, &message.Timestamp)
 
 	if err != nil {
-		log.Fatalln("No rows returned.")
-		return c.Status(500).JSON("error fetching from database")
+		log.Default().Println(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+      "error": "No message found",
+    })
 	}
 
+  // valid if user is logged in
 	if sender.Valid {
 		message.Sender = int(sender.Int32)
 	} else {

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"log"
 	"messageinabottle/models"
 	"os"
 	"time"
@@ -15,7 +16,10 @@ import (
 func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 	user := models.User{}
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(500).JSON(err.Error())
+    log.Default().Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+      "error": "Wrong format",
+    })
 	}
 
 	var hashedSaltedPassword string
@@ -23,10 +27,19 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 	row := db.QueryRow(statement, user.Username)
 	err := row.Scan(&hashedSaltedPassword)
 
+  if err != nil {
+    log.Default().Println(err.Error())
+    return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+      "error": "Could not process entity",
+    })
+  }
+
 	err = bcrypt.CompareHashAndPassword([]byte(hashedSaltedPassword), []byte(user.Password))
 
 	if err != nil {
-		return c.Status(401).JSON("Invalid password.")
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+      "info": "Invalid password",
+    })
 	}
 
 	expirationDate := time.Now().Add(time.Hour * 24 * 14)
@@ -43,8 +56,13 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 		})
 	s, err := t.SignedString(key)
 	if err != nil {
-		return c.Status(500).JSON("An error occurred generating authentication token.")
+    log.Default().Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+      "error": "Could not generate auth token",
+    })
 	}
 
-	return c.JSON(s)
+	return c.JSON(fiber.Map{
+    "auth-token": s,
+  })
 }

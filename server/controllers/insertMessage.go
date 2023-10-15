@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"log"
 	"messageinabottle/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +12,10 @@ func InsertMessageHandler(c *fiber.Ctx, db *sql.DB) error {
 	message := models.Message{}
 
 	if err := c.BodyParser(&message); err != nil {
-		return c.Status(500).JSON(err.Error())
+    log.Default().Println(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+      "error": "Wrong format",
+    })
 	}
 
 	messageStatement := `INSERT INTO Message (content, sender, sender_name, timestamp)
@@ -24,9 +28,14 @@ func InsertMessageHandler(c *fiber.Ctx, db *sql.DB) error {
 		_, err = db.Exec(messageStatement, message.Content, message.ID, message.SenderName)
 	}
 
-	if err != nil {
-		return c.Status(500).JSON("Could not insert into database.")
-	}
+  if err != nil {
+    log.Default().Println(err.Error())
+    return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+      "error": "Could not insert message",
+    })
+  }
 
-	return c.Status(200).JSON("Message sent successfully.")
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+    "success": "Message sent",
+  })
 }
