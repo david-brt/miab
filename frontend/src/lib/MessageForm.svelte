@@ -1,4 +1,4 @@
-<form method="POST" class="modal-form">
+<form method="POST" class="modal-form" action="?/message">
 	<label for="message-input" class="form-label">message</label>
 	<textarea
 		name="content"

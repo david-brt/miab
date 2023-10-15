@@ -32,11 +32,11 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return controllers.IndexHandler(c, db)
 	})
-	app.Get("/login", func(c *fiber.Ctx) error {
+	app.Post("/login", func(c *fiber.Ctx) error {
 		return controllers.LoginHandler(c, db)
 	})
 
-	app.Post("/insert-message", func(c *fiber.Ctx) error {
+	app.Post("/send-message", func(c *fiber.Ctx) error {
 		return controllers.InsertMessageHandler(c, db)
 	})
 

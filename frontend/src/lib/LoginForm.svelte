@@ -1,4 +1,4 @@
-<form class="modal-form">
+<form class="modal-form" method="POST" action="?/login">
 	<label for="username-input" class="form-label">name</label>
 	<input
 		name="username"
