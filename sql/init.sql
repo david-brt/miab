@@ -19,7 +19,7 @@ CREATE TABLE
 INSERT INTO
   User_ (username, password_hash_salted)
 VALUES
-  ('glumanda', 'not_a_hash');
+  ('glumanda', '$2a$12$HyunzAGcR4j0gZ4W3t/DVe2jW8eO/VhBCu4KPJsROSiIQ.6OI8zMK');
 
 INSERT INTO
   Message (content, sender, sender_name, timestamp)
