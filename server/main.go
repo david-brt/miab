@@ -8,7 +8,7 @@ import (
 	_ "github.com/lib/pq"
 	"log"
   "github.com/gofiber/fiber/v2/middleware/logger"
-	"messageinabottle/controllers"
+	"messageinabottle/handlers"
 	"messageinabottle/services"
 	"os"
 )
@@ -30,18 +30,18 @@ func main() {
   app.Use(logger.New())
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return controllers.IndexHandler(c, db)
+		return handlers.IndexHandler(c, db)
 	})
 	app.Post("/login", func(c *fiber.Ctx) error {
-		return controllers.LoginHandler(c, db)
+		return handlers.LoginHandler(c, db)
 	})
 
 	app.Post("/send-message", func(c *fiber.Ctx) error {
-		return controllers.InsertMessageHandler(c, db)
+		return handlers.InsertMessageHandler(c, db)
 	})
 
 	app.Post("/signup", func(c *fiber.Ctx) error {
-		return controllers.SignupHandler(c, db)
+		return handlers.SignupHandler(c, db)
 	})
 
 	app.Use(jwtware.New(jwtware.Config{
@@ -52,7 +52,7 @@ func main() {
 	}))
 
 	app.Get("/verify-token", func(c *fiber.Ctx) error {
-		return controllers.VerifyTokenHandler(c)
+		return handlers.VerifyTokenHandler(c)
 	})
 
 	port := os.Getenv("PORT")
