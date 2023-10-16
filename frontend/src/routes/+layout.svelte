@@ -18,9 +18,10 @@ import Modal from "$lib/Modal.svelte";
 	:global(body) {
 		font-family: 'Lato';
 		font-size: 12px;
+		color: var(--col2);
 		margin: 0;
 		padding: 0;
-		background-color: var(--salmon);
+		background-color: var(--col1);
 		--bg-yellow: #fffce6;
 		--pastel-yellow: #fffba6;
 		--brownish-yellow: #a37b00;
@@ -28,9 +29,12 @@ import Modal from "$lib/Modal.svelte";
 		--almost-red: #ff605b;
 		--border-radius: 0.5em;
 		--orange: #f79b24;
+		--col1: #264653;
+		--col2: #e9c46a;
+		--col3: #e76f51;
 	}
 	:global(button) {
-		background-color: var(--pastel-yellow);
+		background-color: var(--col3);
 		border: none;
 		border-radius: var(--border-radius);
 		padding: 1em;
@@ -70,6 +74,10 @@ import Modal from "$lib/Modal.svelte";
 		display: flex;
     flex-direction: column;
 		justify-content: center;
+	}
+
+	:global(text){
+		color: white;
 	}
 
   .navbar {
