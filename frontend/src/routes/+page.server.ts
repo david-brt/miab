@@ -12,13 +12,13 @@ export async function load({ fetch }: LoadEvent) {
 }
 
 export const actions: Actions = {
-	default: async ({ request }) => {
+	message: async ({ request }) => {
 		const data = await request.formData();
 		const jsonData = {
-			sender: data.get('sender'),
+			senderName: data.get('senderName'),
 			content: data.get('content')
 		};
-		const url = `${PUBLIC_DATA_ROUTE}/update`;
+		const url = `${PUBLIC_DATA_ROUTE}/send-message`;
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
@@ -26,6 +26,24 @@ export const actions: Actions = {
 			},
 			body: JSON.stringify(jsonData)
 		});
-		return response.json();
+	},
+	login: async ({ request, cookies }) => {
+		const data = await request.formData();
+		const jsonData = {
+			username: data.get('username'),
+			password: data.get('password')
+		};
+		const url = `${PUBLIC_DATA_ROUTE}/login`;
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(jsonData)
+		});
+		if (response.status === 202) {
+			const { auth_token } = await response.json();
+			cookies.set('auth_token', auth_token);
+		}
 	}
 };

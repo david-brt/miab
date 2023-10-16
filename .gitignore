@@ -4,11 +4,12 @@ tmp
 node_modules
 /build
 /.svelte-kit
+.svelte-kit
 /package
 .env.prod
 .env.*
 !.env
-!.env.example
+!.env.local
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 compose.prod.yml

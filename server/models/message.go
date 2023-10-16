@@ -1,13 +1,13 @@
 package models
 
 import (
-  "time"
+	"time"
 )
 
 type Message struct {
-  ID        string     `json:"id"`
-  Content   string     `json:"content"`
-  Sender    string     `json:"sender"`
-  Timestamp time.Time  `json:"timestamp"`
+	ID         int       `json:"id"`
+	Content    string    `json:"content"`
+	Sender     int       `json:"sender"`
+	SenderName string    `json:"senderName"`
+	Timestamp  time.Time `json:"timestamp"`
 }
-

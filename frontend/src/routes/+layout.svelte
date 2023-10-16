@@ -1,5 +1,16 @@
+<script>
+  import LoginForm from "$lib/LoginForm.svelte";
+import Modal from "$lib/Modal.svelte";
+  let showModal = false
+</script>
+
 <div class="container">
-	<nav class="navbar" />
+	<nav class="navbar">
+    <button on:click={() => (showModal = true)}>Login</button>
+    <Modal bind:showModal>
+      <LoginForm />
+    </Modal>
+  </nav>
 	<slot />
 </div>
 
@@ -34,10 +45,35 @@
 		color: #a37b00;
 	}
 
-	.container {
+  :global(.modal-form) {
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+  }
+
+	:global(.form-input) {
+		border: none;
+		border-radius: var(--border-radius);
+		font-family: 'Lato';
+		padding: 0.5em;
+		resize: none;
+		background-color: var(--pastel-yellow);
+		font-size: 1.5em;
+	}
+
+	:global(.form-label) {
+		display: none;
+	}
+
+	:global(.container) {
 		margin: auto;
 		display: flex;
+    flex-direction: column;
 		justify-content: center;
-		width: 90vw;
 	}
+
+  .navbar {
+    width: 100%;
+    padding: 1em;
+  }
 </style>
