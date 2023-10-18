@@ -3,9 +3,8 @@
   import { handleSubmit } from '$lib/utils/form'
   //closure to give handleSubmit access to the data route
   async function callHandleSubmit(e: SubmitEvent) {
-    handleSubmit(e, `${PUBLIC_DATA_ROUTE}/login`)
+    handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
   }
-
 </script>
 
 <form class="modal-form" on:submit|preventDefault={callHandleSubmit}>
@@ -29,6 +28,16 @@
 		maxlength="72"
 		class="form-input"
 	/>
+	<label for="password-retype" class="form-label">password</label>
+	<input
+		name="dontcare"
+		id="password-retype"
+		type="password"
+		placeholder="retype password"
+    value=""
+		maxlength="72"
+		class="form-input"
+	/>
 	<button class="send-button">send</button>
-  <p style="display: none;"><strong>Invalid credentials</strong></p>
+  <p style="display: none;"><strong>something about username already taken</strong></p>
 </form>

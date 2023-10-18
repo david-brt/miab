@@ -1,14 +1,20 @@
 <script>
   import LoginForm from "$lib/LoginForm.svelte";
 import Modal from "$lib/Modal.svelte";
-  let showModal = false
+	import SignupForm from "$lib/SignupForm.svelte";
+  let showLoginModal = false
+	let showSignupModal = false;
 </script>
 
 <div class="container">
 	<nav class="navbar">
-    <button on:click={() => (showModal = true)}>Login</button>
-    <Modal bind:showModal>
+    <button on:click={() => (showLoginModal = true)}>Login</button>
+    <Modal bind:showModal={showLoginModal}>
       <LoginForm />
+    </Modal>
+		<button on:click={() => (showSignupModal = true)}>Signup</button>
+    <Modal bind:showModal={showSignupModal} >
+      <SignupForm />
     </Modal>
   </nav>
 	<slot />

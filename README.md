@@ -30,3 +30,6 @@ docker-compose up -d
 
 ### ANIMATIONSSSSS
 - when sending or receiving a new Message an animation of a guys fishing a bottle out of the sea could play(sum really crappy pixel art, I know a guy... it is me, the guy is me)
+
+### Passwort anzeigen lassen
+- beim login optional das passwort anzeigen

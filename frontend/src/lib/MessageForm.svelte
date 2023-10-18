@@ -2,12 +2,13 @@
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
   //closure to give handleSubmit access to the data route
+  
   async function callHandleSubmit(e: SubmitEvent) {
     handleSubmit(e, `${PUBLIC_DATA_ROUTE}/send-message`)
   }
 </script>
 
-<form class="modal-form" on:submit|stopPropagation={callHandleSubmit}>
+<form class="modal-form" on:submit|preventDefault={callHandleSubmit}>
 	<label for="message-input" class="form-label">message</label>
 	<textarea
 		name="content"
