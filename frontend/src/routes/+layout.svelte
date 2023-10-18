@@ -21,6 +21,7 @@ import Modal from "$lib/Modal.svelte";
 		color: var(--col2);
 		margin: 0;
 		padding: 0;
+		overflow: hidden;
 		background-color: var(--col1);
 		--bg-yellow: #fffce6;
 		--pastel-yellow: #fffba6;
