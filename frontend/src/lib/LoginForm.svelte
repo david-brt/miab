@@ -1,26 +1,13 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
-  async function handleSubmit(e: SubmitEvent) {
-    const formData = new FormData(e.target as HTMLFormElement)
-    const data: {[key: string]: FormDataEntryValue} = {};
-    //deconstructs each field and adds it to data object
-    for (let field of formData) {
-      const [key, value] = field;
-      data[key] = value;
-    }
-    await fetch(`${PUBLIC_DATA_ROUTE}/login`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    })
+  import { handleSubmit } from '$lib/utils/form'
+  //closure to give handleSubmit access to the data route
+  async function callHandleSubmit(e: SubmitEvent) {
+    handleSubmit(e, `${PUBLIC_DATA_ROUTE}/login`)
   }
 </script>
 
-<form class="modal-form" on:submit|preventDefault={handleSubmit}>
+<form class="modal-form" on:submit|preventDefault={callHandleSubmit}>
 	<label for="username-input" class="form-label">name</label>
 	<input
 		name="username"
