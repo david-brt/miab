@@ -28,7 +28,7 @@
 
 <style>
 	.modal-dialog {
-		background-color: var(--bg-yellow);
+		background-color: var(--col2);
 		border-radius: var(--border-radius);
 		border: none;
 		padding: 0;
