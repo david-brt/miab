@@ -2,15 +2,17 @@ package main
 
 import (
 	"fmt"
-	jwtware "github.com/gofiber/contrib/jwt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
 	"log"
-  "github.com/gofiber/fiber/v2/middleware/logger"
 	"messageinabottle/handlers"
 	"messageinabottle/services"
 	"os"
+
+	jwtware "github.com/gofiber/contrib/jwt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -28,6 +30,11 @@ func main() {
 	db := services.ConnectDB(connStr)
 
   app.Use(logger.New())
+  app.Use(cors.New(cors.Config{
+    AllowOrigins: "http://localhost:5173",
+    AllowHeaders:  "Origin, Content-Type, Accept",
+    AllowCredentials: true,
+  }))
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return handlers.IndexHandler(c, db)

@@ -29,8 +29,8 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 
   if err != nil {
     log.Default().Println(err.Error())
-    return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-      "error": "Could not process entity",
+    return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+      "error": "Invalid credentials",
     })
   }
 
@@ -38,7 +38,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-      "info": "Invalid password",
+      "error": "Invalid credentials",
     })
 	}
 
@@ -62,7 +62,14 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
+  c.Cookie(&fiber.Cookie{
+    Name: "auth_token",
+    Value: s,
+    Expires: time.Now().Add(7 * 24 * time.Hour),
+    HTTPOnly: true,
+  })
+
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-    "auth_token": s,
+    "success": "true",
   })
 }
