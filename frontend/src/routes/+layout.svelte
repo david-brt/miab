@@ -91,4 +91,11 @@ import Modal from "$lib/Modal.svelte";
     width: 100%;
     padding: 1em;
   }
+
+	:global(.errortext){
+		margin: 0;
+		padding: 0;
+		color: red;
+	}
+
 </style>

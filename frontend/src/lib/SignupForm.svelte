@@ -1,20 +1,38 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
+  let username = '';
+  let password = '';
+  let retyped_password= '';
+  let wrong_password = false;
+
+
   //closure to give handleSubmit access to the data route
-  async function callHandleSubmit(e: SubmitEvent) {
-    handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
+  async function onSubmit(e: SubmitEvent) {
+	console.log(password)
+	console.log(retyped_password)
+	if(password === retyped_password){
+		await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
+		username = ''
+		password = ''
+		retyped_password = ''
+	}
+	else{
+		console.log("Überleg nochmal")
+		wrong_password=true
+	}
   }
+
 </script>
 
-<form class="modal-form" on:submit|preventDefault={callHandleSubmit}>
+<form class="modal-form" on:submit|preventDefault={onSubmit}>
 	<label for="username-input" class="form-label">name</label>
 	<input
 		name="username"
 		id="username-input"
 		type="text"
 		placeholder="username"
-    value=""
+    	bind:value={username}
 		maxlength="34"
 		class="form-input"
 	/>
@@ -24,17 +42,21 @@
 		id="password-input"
 		type="password"
 		placeholder="password"
-    value=""
+    	bind:value={password}
 		maxlength="72"
 		class="form-input"
+		
 	/>
 	<label for="password-retype" class="form-label">password</label>
+	{#if wrong_password}
+		<p class="errortext">joa is blöd</p>
+	{/if}
 	<input
-		name="dontcare"
+		name="retyped"
 		id="password-retype"
 		type="password"
 		placeholder="retype password"
-    value=""
+    	bind:value={retyped_password}
 		maxlength="72"
 		class="form-input"
 	/>
