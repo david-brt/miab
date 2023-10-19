@@ -3,9 +3,6 @@
 	import MessageForm from '$lib/MessageForm.svelte';
   import { showModal } from '$lib/stores.js';
 
-  function onClick() {
-    showModal.update(previousState => ({ ...previousState, message: true}))
-  }
 	export let data;
 </script>
 
@@ -16,7 +13,7 @@
 	<p class="message">
 		{data.message.content}
 	</p>
-  <button on:click={onClick}>Share your own idea</button>
+  <button on:click={() => showModal.set('message', true)}>Share your own idea</button>
   <Modal modalType={"message"}>
 		<MessageForm />
 	</Modal>

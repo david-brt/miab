@@ -7,20 +7,17 @@
 
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
-      updateShowModal(false)
+      showModal.set(modalType, false)
 		}
 	}
 
-  function updateShowModal(newValue: boolean) {
-    showModal.update(previousState => ({ ...previousState, [modalType]: newValue }));
-  }
 
   $: if (dialog && $showModal[modalType]) dialog.showModal();
 </script>
 
 <dialog
 	bind:this={dialog}
-	on:close={() => (updateShowModal(false))}
+	on:close={() => (showModal.set(modalType, false))}
 	on:click|self={() => dialog.close()}
 	on:keydown={handleKeyDown}
 	class="modal-dialog"

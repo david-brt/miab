@@ -5,7 +5,7 @@
   import { showModal } from "$lib/stores";
 
   function onClick(modalType: keyof typeof $showModal) {
-    showModal.update(previousState => ({ ...previousState, [modalType]: true}))
+    showModal.set(modalType, true)
   }
 </script>
 

@@ -5,8 +5,8 @@
 
   async function callHandleSubmit(e: SubmitEvent) {
     const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/send-message`)
-    if(response.status === 202) {
-      showModal.update(previousState => ({ ...previousState, message: false }))
+    if(response.status === 200) {
+      showModal.set('message', false)
     }
   }
 </script>

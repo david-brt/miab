@@ -6,7 +6,9 @@
   async function callHandleSubmit(e: SubmitEvent) {
     const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/login`)
     if(response.status === 202) {
-      showModal.update(previousState => ({ ...previousState, login: false }))
+      const json = await response.json()
+      console.log(json)
+      showModal.set('login', false)
     }
   }
 

@@ -1,7 +1,17 @@
 import { writable } from 'svelte/store';
 
-export const showModal = writable({
-	login: false,
-  signup: false,
-	message: false
-});
+type ModalType = 'login' | 'signup' | 'message'
+
+function createShowModal() {
+  const {subscribe, update } = writable({
+    login: false,
+    signup: false,
+    message: false
+  })
+  return {
+    subscribe,
+    set: (modalType: ModalType, value: boolean) => update((previousState) => ({ ...previousState, [modalType]: value }))
+  }
+}
+
+export const showModal = createShowModal()
