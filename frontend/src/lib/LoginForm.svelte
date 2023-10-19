@@ -9,6 +9,7 @@
       showModal.update(previousState => ({ ...previousState, login: false }))
     }
   }
+
 </script>
 
 <form class="modal-form" on:submit|preventDefault={callHandleSubmit}>

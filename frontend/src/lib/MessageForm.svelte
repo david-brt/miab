@@ -11,7 +11,7 @@
   }
 </script>
 
-<form class="modal-form" on:submit|stopPropagation={callHandleSubmit}>
+<form class="modal-form" on:submit|preventDefault={callHandleSubmit}>
 	<label for="message-input" class="form-label">message</label>
 	<textarea
 		name="content"

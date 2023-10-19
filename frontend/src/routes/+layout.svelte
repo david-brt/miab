@@ -1,18 +1,23 @@
-<script>
+<script lang='ts'>
   import LoginForm from "$lib/LoginForm.svelte";
+  import SignupForm from "$lib/SignupForm.svelte";
   import Modal from "$lib/Modal.svelte";
   import { showModal } from "$lib/stores";
 
-  function onClick() {
-    showModal.update(previousState => ({ ...previousState, login: true}))
+  function onClick(modalType: keyof typeof $showModal) {
+    showModal.update(previousState => ({ ...previousState, [modalType]: true}))
   }
 </script>
 
 <div class="container">
 	<nav class="navbar">
-    <button on:click={onClick}>Login</button>
+    <button on:click={() => onClick("login")}>Login</button>
     <Modal modalType={"login"}>
       <LoginForm />
+    </Modal>
+		<button on:click={() => onClick("signup")}>Signup</button>
+    <Modal modalType={"signup"}>
+      <SignupForm />
     </Modal>
   </nav>
 	<slot />
@@ -89,4 +94,11 @@
     width: 100%;
     padding: 1em;
   }
+
+	:global(.errortext){
+		margin: 0;
+		padding: 0;
+		color: red;
+	}
+
 </style>
