@@ -1,9 +1,13 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
-  //closure to give handleSubmit access to the data route
+  import { showModal } from './stores';
+
   async function callHandleSubmit(e: SubmitEvent) {
-    handleSubmit(e, `${PUBLIC_DATA_ROUTE}/send-message`)
+    const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/send-message`)
+    if(response.status === 202) {
+      showModal.update(previousState => ({ ...previousState, message: false }))
+    }
   }
 </script>
 

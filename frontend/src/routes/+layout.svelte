@@ -1,13 +1,17 @@
 <script>
   import LoginForm from "$lib/LoginForm.svelte";
-import Modal from "$lib/Modal.svelte";
-  let showModal = false
+  import Modal from "$lib/Modal.svelte";
+  import { showModal } from "$lib/stores";
+
+  function onClick() {
+    showModal.update(previousState => ({ ...previousState, login: true}))
+  }
 </script>
 
 <div class="container">
 	<nav class="navbar">
-    <button on:click={() => (showModal = true)}>Login</button>
-    <Modal bind:showModal>
+    <button on:click={onClick}>Login</button>
+    <Modal modalType={"login"}>
       <LoginForm />
     </Modal>
   </nav>

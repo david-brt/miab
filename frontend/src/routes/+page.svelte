@@ -1,8 +1,11 @@
 <script lang="ts">
 	import Modal from '$lib/Modal.svelte';
 	import MessageForm from '$lib/MessageForm.svelte';
+  import { showModal } from '$lib/stores.js';
 
-	let showModal = false;
+  function onClick() {
+    showModal.update(previousState => ({ ...previousState, message: true}))
+  }
 	export let data;
 </script>
 
@@ -13,8 +16,8 @@
 	<p class="message">
 		{data.message.content}
 	</p>
-	<button on:click={() => (showModal = true)}>Share your own idea</button>
-	<Modal bind:showModal>
+  <button on:click={onClick}>Share your own idea</button>
+  <Modal modalType={"message"}>
 		<MessageForm />
 	</Modal>
 </div>

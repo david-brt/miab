@@ -1,18 +1,26 @@
 <script lang="ts">
-	export let showModal: boolean;
+  import { showModal } from '$lib/stores'
+
+  type ShowModalKey = keyof typeof $showModal
+  export let modalType: ShowModalKey;
 	let dialog: HTMLDialogElement;
+
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
-			showModal = false;
+      updateShowModal(false)
 		}
 	}
 
-	$: if (dialog && showModal) dialog.showModal();
+  function updateShowModal(newValue: boolean) {
+    showModal.update(previousState => ({ ...previousState, [modalType]: newValue }));
+  }
+
+  $: if (dialog && $showModal[modalType]) dialog.showModal();
 </script>
 
 <dialog
 	bind:this={dialog}
-	on:close={() => (showModal = false)}
+	on:close={() => (updateShowModal(false))}
 	on:click|self={() => dialog.close()}
 	on:keydown={handleKeyDown}
 	class="modal-dialog"
