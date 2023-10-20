@@ -48,6 +48,7 @@
 		--col1: #264653;
 		--col2: #e9c46a;
 		--col3: #e76f51;
+    --error-red: #c1121f;
 	}
 	:global(button) {
 		background-color: var(--col3);

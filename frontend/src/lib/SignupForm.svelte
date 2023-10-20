@@ -1,20 +1,25 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
+	import SubmitError from './SubmitError.svelte';
+
+  const ACCEPTED = 202
+  const INTERNALSERVERERROR = 500
+
+  let signupStatus: number;
   let username = '';
   let password = '';
   let retyped_password= '';
-  let wrong_password = false;
 
   async function onSubmit(e: SubmitEvent) {
     if(password === retyped_password){
-      await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
-      username = ''
-      password = ''
-      retyped_password = ''
-    }
-    else{
-      wrong_password=true
+      const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
+      signupStatus = response.status
+      if(signupStatus === ACCEPTED) {
+        username = ''
+        password = ''
+        retyped_password = ''
+      }
     }
   }
 
@@ -43,9 +48,6 @@
 
 	/>
 	<label for="password-retype" class="form-label">password</label>
-	{#if wrong_password}
-		<p class="errortext">joa is blöd</p>
-	{/if}
 	<input
 		name="retyped"
 		id="password-retype"
@@ -56,5 +58,7 @@
 		class="form-input"
 	/>
 	<button class="send-button">send</button>
-  <p style="display: none;"><strong>something about username already taken</strong></p>
+  {#if signupStatus === INTERNALSERVERERROR}
+    <SubmitError>Something went wrong. Try again later.</SubmitError>
+  {/if}
 </form>

@@ -1,11 +1,17 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
+	import SubmitError from './SubmitError.svelte';
   import { showModal } from './stores';
+
+  const INTERNALSERVERERROR = 500;
+  const ACCEPTED = 202;
+  let messageStatus: number;
 
   async function callHandleSubmit(e: SubmitEvent) {
     const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/send-message`)
-    if(response.status === 200) {
+    messageStatus = response.status;
+    if(messageStatus === ACCEPTED) {
       showModal.set('message', false)
     }
   }
@@ -31,6 +37,9 @@
 		maxlength="50"
 		class="form-input"
 	/>
+  {#if messageStatus === INTERNALSERVERERROR}
+    <SubmitError>Something went wrong. Try again later</SubmitError>
+  {/if}
 	<button class="send-button">send</button>
 </form>
 

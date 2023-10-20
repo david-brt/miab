@@ -11,7 +11,6 @@
 		}
 	}
 
-
   $: if (dialog && $showModal[modalType]) dialog.showModal();
 </script>
 
