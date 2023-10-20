@@ -71,5 +71,9 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
     "success": "true",
+    "user": fiber.Map{
+      "id": user.ID,
+      "name": user.Username,
+    },
   })
 }

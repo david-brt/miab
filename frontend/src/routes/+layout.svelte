@@ -2,7 +2,11 @@
   import LoginForm from "$lib/LoginForm.svelte";
   import SignupForm from "$lib/SignupForm.svelte";
   import Modal from "$lib/Modal.svelte";
-  import { showModal } from "$lib/stores";
+  import type { LayoutData } from "./$types";
+  import { showModal, user } from "$lib/stores";
+
+  export let data: LayoutData;
+  user.set(data.user)
 
   function onClick(modalType: keyof typeof $showModal) {
     showModal.set(modalType, true)
@@ -11,6 +15,7 @@
 
 <div class="container">
 	<nav class="navbar">
+    {#if !$user}
     <button on:click={() => onClick("login")}>Login</button>
     <Modal modalType={"login"}>
       <LoginForm />
@@ -19,6 +24,7 @@
     <Modal modalType={"signup"}>
       <SignupForm />
     </Modal>
+    {/if}
   </nav>
 	<slot />
 </div>

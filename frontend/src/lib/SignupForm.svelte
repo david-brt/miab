@@ -6,8 +6,6 @@
   let retyped_password= '';
   let wrong_password = false;
 
-
-  //closure to give handleSubmit access to the data route
   async function onSubmit(e: SubmitEvent) {
     if(password === retyped_password){
       await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)

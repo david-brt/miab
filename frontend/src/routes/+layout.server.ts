@@ -13,7 +13,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 		return {
 			user: {
 				id: claims.sub,
-				usename: claims.name
+				name: claims.name
 			}
 		};
 	}
