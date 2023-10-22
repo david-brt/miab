@@ -12,18 +12,19 @@
 	}
 
   $: if (dialog && $showModal[modalType]) dialog.showModal();
+  $: if (dialog && !$showModal[modalType]) dialog.close();
 </script>
 
 <dialog
 	bind:this={dialog}
 	on:close={() => (showModal.set(modalType, false))}
-	on:click|self={() => dialog.close()}
+	on:click|self={() => showModal.set(modalType, false)}
 	on:keydown={handleKeyDown}
 	class="modal-dialog"
 	on:click|stopPropagation
 >
 	<div class="content">
-		<button class="close-button" on:click={() => dialog.close()}>
+		<button class="close-button" on:click={() => showModal.set(modalType, false)}>
 			<img width="30px" src="icons/x-icon.svg" alt="" />
 		</button>
 		<slot />
