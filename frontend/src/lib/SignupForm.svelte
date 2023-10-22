@@ -1,8 +1,10 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
+  import { showModal, user } from './stores'
 	import SubmitError from './SubmitError.svelte';
 
+  const CREATED = 201
   const ACCEPTED = 202
   const INTERNALSERVERERROR = 500
 
@@ -15,10 +17,12 @@
     if(password === retyped_password){
       const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
       signupStatus = response.status
-      if(signupStatus === ACCEPTED) {
+	  console.log(signupStatus)
+      if(signupStatus === CREATED) {
         username = ''
         password = ''
         retyped_password = ''
+		showModal.set('signup', false)
       }
     }
   }
