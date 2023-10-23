@@ -1,25 +1,30 @@
 <script lang="ts">
-	export let showModal: boolean;
+  import { showModal } from '$lib/stores'
+
+  type ShowModalKey = keyof typeof $showModal
+  export let modalType: ShowModalKey;
 	let dialog: HTMLDialogElement;
+
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
-			showModal = false;
+      showModal.set(modalType, false)
 		}
 	}
 
-	$: if (dialog && showModal) dialog.showModal();
+  $: if (dialog && $showModal[modalType]) dialog.showModal();
+  $: if (dialog && !$showModal[modalType]) dialog.close();
 </script>
 
 <dialog
 	bind:this={dialog}
-	on:close={() => (showModal = false)}
-	on:click|self={() => dialog.close()}
+	on:close={() => (showModal.set(modalType, false))}
+	on:click|self={() => showModal.set(modalType, false)}
 	on:keydown={handleKeyDown}
 	class="modal-dialog"
 	on:click|stopPropagation
 >
 	<div class="content">
-		<button class="close-button" on:click={() => dialog.close()}>
+		<button class="close-button" on:click={() => showModal.set(modalType, false)}>
 			<img width="30px" src="icons/x-icon.svg" alt="" />
 		</button>
 		<slot />

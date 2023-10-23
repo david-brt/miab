@@ -1,9 +1,23 @@
 <script lang="ts">
-	import Modal from '$lib/Modal.svelte';
-	import MessageForm from '$lib/MessageForm.svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import MessageForm from '$lib/components/MessageForm.svelte';
+  	import { showModal} from '$lib/stores';
+	
+  	import type { Message } from '../../types/message';
+	import { PUBLIC_DATA_ROUTE } from '$env/static/public';
+	
 
-	let showModal = false;
+
 	export let data;
+
+	async function fetchNewMessage() {
+		const response = await fetch(PUBLIC_DATA_ROUTE);
+		data.message = await response.json();
+		console.log("got new Message")
+  		
+  }
+
+
 </script>
 
 <div class="content">
@@ -13,10 +27,11 @@
 	<p class="message">
 		{data.message.content}
 	</p>
-	<button on:click={() => (showModal = true)}>Share your own idea</button>
-	<Modal bind:showModal>
+  <button on:click={() => showModal.set('message', true)}>Share your own idea</button>
+  <Modal modalType={"message"}>
 		<MessageForm />
 	</Modal>
+	<button on:click={()=>fetchNewMessage()}>Get new Message</button>
 </div>
 
 <style>

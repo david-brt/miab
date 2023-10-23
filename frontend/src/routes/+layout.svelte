@@ -1,15 +1,30 @@
-<script>
-  import LoginForm from "$lib/LoginForm.svelte";
-import Modal from "$lib/Modal.svelte";
-  let showModal = false
+<script lang='ts'>
+  import LoginForm from "$lib/components/LoginForm.svelte";
+  import SignupForm from "$lib/components/SignupForm.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import type { LayoutData } from "./$types";
+  import { showModal, user } from "$lib/stores";
+
+  export let data: LayoutData;
+  user.set(data.user)
+
+  function onClick(modalType: keyof typeof $showModal) {
+    showModal.set(modalType, true)
+  }
 </script>
 
 <div class="container">
 	<nav class="navbar">
-    <button on:click={() => (showModal = true)}>Login</button>
-    <Modal bind:showModal>
+    {#if !$user}
+    <button on:click={() => onClick("login")}>Login</button>
+    <Modal modalType={"login"}>
       <LoginForm />
     </Modal>
+		<button on:click={() => onClick("signup")}>Signup</button>
+    <Modal modalType={"signup"}>
+      <SignupForm />
+    </Modal>
+    {/if}
   </nav>
 	<slot />
 </div>
@@ -33,6 +48,7 @@ import Modal from "$lib/Modal.svelte";
 		--col1: #264653;
 		--col2: #e9c46a;
 		--col3: #e76f51;
+    --error-red: #c1121f;
 	}
 	:global(button) {
 		background-color: var(--col3);
@@ -85,4 +101,11 @@ import Modal from "$lib/Modal.svelte";
     width: 100%;
     padding: 1em;
   }
+
+	:global(.errortext){
+		margin: 0;
+		padding: 0;
+		color: red;
+	}
+
 </style>
