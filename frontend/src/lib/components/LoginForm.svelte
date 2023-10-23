@@ -2,7 +2,7 @@
   import SubmitError from './SubmitError.svelte'
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
-  import { showModal, user } from './stores'
+  import { showModal, user } from '../stores'
 
   const ACCEPTED = 202
   const UNAUTHORIZED = 401

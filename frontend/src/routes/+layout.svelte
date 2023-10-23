@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import LoginForm from "$lib/LoginForm.svelte";
-  import SignupForm from "$lib/SignupForm.svelte";
-  import Modal from "$lib/Modal.svelte";
+  import LoginForm from "$lib/components/LoginForm.svelte";
+  import SignupForm from "$lib/components/SignupForm.svelte";
+  import Modal from "$lib/components/Modal.svelte";
   import type { LayoutData } from "./$types";
   import { showModal, user } from "$lib/stores";
 

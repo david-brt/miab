@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Modal from '$lib/Modal.svelte';
-	import MessageForm from '$lib/MessageForm.svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import MessageForm from '$lib/components/MessageForm.svelte';
   import { showModal} from '$lib/stores.js';
 
 	export let data;

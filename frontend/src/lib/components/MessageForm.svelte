@@ -2,7 +2,7 @@
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
 	import SubmitError from './SubmitError.svelte';
-  import { showModal } from './stores';
+  import { showModal } from '../stores';
 
   const INTERNALSERVERERROR = 500;
   const ACCEPTED = 202;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public'
   import { handleSubmit } from '$lib/utils/form'
-  import { showModal, user } from './stores'
+  import { showModal } from '../stores'
 	import SubmitError from './SubmitError.svelte';
 
   const CREATED = 201
