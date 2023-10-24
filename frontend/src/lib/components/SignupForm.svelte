@@ -6,6 +6,7 @@
 
   const CREATED = 201
   const ACCEPTED = 202
+  const CONFLICT = 409
   const INTERNALSERVERERROR = 500
 
   let signupStatus: number;
@@ -16,8 +17,9 @@
   async function onSubmit(e: SubmitEvent) {
     if(password === retyped_password){
       const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
+
       signupStatus = response.status
-	  console.log(signupStatus)
+
       if(signupStatus === CREATED) {
         username = ''
         password = ''
@@ -61,8 +63,13 @@
 		maxlength="72"
 		class="form-input"
 	/>
+	{#if signupStatus === CONFLICT}
+  	<SubmitError>Username already exists</SubmitError>
+	{/if}
+	{#if signupStatus === INTERNALSERVERERROR}
+		<SubmitError>Something went wrong. Try again later.</SubmitError>
+	{/if}
 	<button class="send-button">send</button>
-  {#if signupStatus === INTERNALSERVERERROR}
-    <SubmitError>Something went wrong. Try again later.</SubmitError>
-  {/if}
+
+  
 </form>

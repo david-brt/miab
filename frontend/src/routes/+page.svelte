@@ -2,6 +2,8 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import MessageForm from '$lib/components/MessageForm.svelte';
   	import { showModal} from '$lib/stores';
+
+
 	
   	import type { Message } from '../../types/message';
 	import { PUBLIC_DATA_ROUTE } from '$env/static/public';
@@ -21,6 +23,7 @@
 </script>
 
 <div class="content">
+
 	<p class="greeting">
 		Your message by {data.message.senderName}:
 	</p>
