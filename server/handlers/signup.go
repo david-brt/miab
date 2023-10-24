@@ -34,10 +34,11 @@ func SignupHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
-	statement := `INSERT INTO User_ (username, password_hash_salted) VALUES ($1, $2)`
+	statement := `INSERT INTO User_ (username, password_hash_salted, latest_login_attempt, failed_login_attempts) VALUES ($1, $2, CURRENT_TIMESTAMP, 0)`
 
 	_, err = db.Exec(statement, user.Username, string(hashedSaltedPassword))
 	if err != nil {
+    log.Default().Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
       "error": "Could not process entity",
     })

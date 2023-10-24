@@ -37,6 +37,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 	err = bcrypt.CompareHashAndPassword([]byte(hashedSaltedPassword), []byte(user.Password))
 
 	if err != nil {
+    log.Default().Println(err.Error())
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
       "error": "Invalid credentials",
     })
