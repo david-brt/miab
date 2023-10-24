@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+  "errors"
 	"log"
 	"messageinabottle/models"
 	"os"
@@ -12,6 +13,30 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// - returns a bool indicating whether a user is on cooldown and a float that holds the seconds until not on cooldown anymore
+// - cooldown (10s) gets activated after 5 unsuccessful attempts
+func isOnCooldown(user *models.User, db *sql.DB) (bool, float) {
+  var lastAttempt time.Time
+  var failedAttempts int
+
+  statement := `SELECT latest_login_attempt, failed_login_attempts FROM USER_ WHERE username = $1`
+  row := db.QueryRow(statement, user.Username)
+  err := row.Scan(&lastAttempt, &failedAttempts)
+  if err != nil {
+    log.Default().Println(err.Error())
+  }
+
+  secondsSinceLastAttempt := time.Now().Sub(lastAttempt).Seconds()
+
+  if failedAttempts <= 5 {
+    return false, 0
+  }
+  if secondsSinceLastAttempt <= 10 {
+    return true, 10 - secondsSinceLastAttempt
+  }
+  return false, 0
+}
+
 // generates jwt token and returns it to client
 func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 	user := models.User{}
@@ -21,6 +46,15 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
       "error": "Wrong format",
     })
 	}
+
+  isOnCooldown, onCooldownFor := isOnCooldown(user, db)
+
+  if isOnCooldown {
+    return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+      "error": "On cooldown",
+      "onCooldownFor": onCooldownFor,
+    })
+  }
 
 	var hashedSaltedPassword string
 	statement := `SELECT password_hash_salted FROM USER_ WHERE username = $1`
@@ -77,4 +111,3 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
       "name": user.Username,
     },
   })
-}
