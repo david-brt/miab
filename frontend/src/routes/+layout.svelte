@@ -25,6 +25,10 @@
       <SignupForm />
     </Modal>
     {/if}
+	{#if $user}
+    <p>you are logged in as {$user.name}</p>
+    {/if}
+
   </nav>
 	<slot />
 </div>

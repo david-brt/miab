@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 
 type ModalType = 'login' | 'signup' | 'message';
 
@@ -15,6 +15,11 @@ function createShowModal() {
 	};
 }
 
-export const user = writable();
+type UserType = {
+	id: string;
+	name: string;
+}
+
+export const user:Writable<UserType | undefined> = writable();
 
 export const showModal = createShowModal();
