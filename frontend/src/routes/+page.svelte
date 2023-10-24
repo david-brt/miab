@@ -2,7 +2,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import MessageForm from '$lib/components/MessageForm.svelte';
   	import { showModal} from '$lib/stores';
-	import GIF from '$lib/images/throw-frame-order.gif';
+
 
 	
   	import type { Message } from '../../types/message';
@@ -23,7 +23,7 @@
 </script>
 
 <div class="content">
-	<!-- <img src={GIF} alt="gif that plays after you have sent a message" > -->
+
 	<p class="greeting">
 		Your message by {data.message.senderName}:
 	</p>
