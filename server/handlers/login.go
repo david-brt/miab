@@ -10,40 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"golang.org/x/crypto/bcrypt"
 )
-func updateAttemptStatus(user *models.User, db *sql.DB) {
-  statement := `UPDATE User_ SET latest_login_attempt = CURRENT_TIMESTAMP, failed_login_attempts = failed_login_attempts + 1 WHERE username = $1`
-  _, err := db.Exec(statement, user.Username)
-  if err != nil {
-    log.Default().Println(err.Error())
-    // further error handling might be required
-  }
-}
-
-// - returns a bool indicating whether a user is on cooldown and a float that holds the seconds until not on cooldown anymore
-// - cooldown (10s) gets activated after 5 unsuccessful attempts
-func isOnCooldown(user *models.User, db *sql.DB) (bool, float64) {
-  var lastAttempt time.Time
-  var failedAttempts int
-
-  statement := `SELECT latest_login_attempt, failed_login_attempts FROM USER_ WHERE username = $1`
-  row := db.QueryRow(statement, user.Username)
-  err := row.Scan(&lastAttempt, &failedAttempts)
-  if err != nil {
-    log.Default().Println(err.Error())
-  }
-
-  secondsSinceLastAttempt := time.Now().Sub(lastAttempt).Seconds()
-
-  if failedAttempts <= 5 {
-    return false, 0
-  }
-  if secondsSinceLastAttempt <= 10 {
-    return true, 10 - secondsSinceLastAttempt
-  }
-  return false, 0
-}
 
 // generates jwt token and returns it to client
 func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
@@ -56,39 +23,17 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 	}
 
   if !dataaccess.UserExists(db, user.Username) {
-    return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-      "error": "Invalid credentials",
-    })
   }
 
-  isOnCooldown, onCooldownFor := isOnCooldown(&user, db)
-
-  if isOnCooldown {
+  if dataaccess.IsOnCooldown(db, &user) {
     return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
       "error": "On cooldown",
-      "onCooldownFor": onCooldownFor,
     })
   }
 
-	var hashedSaltedPassword string
-  statement := `SELECT password_hash_salted FROM USER_ WHERE username = $1`
-	row := db.QueryRow(statement, user.Username)
-	err := row.Scan(&hashedSaltedPassword)
-
-  if err != nil {
-    log.Default().Println(err.Error())
-    updateAttemptStatus(&user, db)
+	if !dataaccess.PasswordMatchesHash(db, &user) {
+    dataaccess.UpdateAttemptStatus(db, &user)
     return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-      "error": "Invalid credentials",
-    })
-  }
-
-	err = bcrypt.CompareHashAndPassword([]byte(hashedSaltedPassword), []byte(user.Password))
-
-	if err != nil {
-    log.Default().Println(err.Error())
-    updateAttemptStatus(&user, db)
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
       "error": "Invalid credentials",
     })
 	}
