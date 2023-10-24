@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"database/sql"
-  "errors"
 	"log"
+	"messageinabottle/dataaccess"
 	"messageinabottle/models"
 	"os"
 	"time"
@@ -12,10 +12,18 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
+func updateAttemptStatus(user *models.User, db *sql.DB) {
+  statement := `UPDATE User_ SET latest_login_attempt = CURRENT_TIMESTAMP, failed_login_attempts = failed_login_attempts + 1 WHERE username = $1`
+  _, err := db.Exec(statement, user.Username)
+  if err != nil {
+    log.Default().Println(err.Error())
+    // further error handling might be required
+  }
+}
 
 // - returns a bool indicating whether a user is on cooldown and a float that holds the seconds until not on cooldown anymore
 // - cooldown (10s) gets activated after 5 unsuccessful attempts
-func isOnCooldown(user *models.User, db *sql.DB) (bool, float) {
+func isOnCooldown(user *models.User, db *sql.DB) (bool, float64) {
   var lastAttempt time.Time
   var failedAttempts int
 
@@ -47,7 +55,13 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
-  isOnCooldown, onCooldownFor := isOnCooldown(user, db)
+  if !dataaccess.UserExists(db, user.Username) {
+    return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+      "error": "Invalid credentials",
+    })
+  }
+
+  isOnCooldown, onCooldownFor := isOnCooldown(&user, db)
 
   if isOnCooldown {
     return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
@@ -57,12 +71,13 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
   }
 
 	var hashedSaltedPassword string
-	statement := `SELECT password_hash_salted FROM USER_ WHERE username = $1`
+  statement := `SELECT password_hash_salted FROM USER_ WHERE username = $1`
 	row := db.QueryRow(statement, user.Username)
 	err := row.Scan(&hashedSaltedPassword)
 
   if err != nil {
     log.Default().Println(err.Error())
+    updateAttemptStatus(&user, db)
     return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
       "error": "Invalid credentials",
     })
@@ -72,6 +87,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 
 	if err != nil {
     log.Default().Println(err.Error())
+    updateAttemptStatus(&user, db)
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
       "error": "Invalid credentials",
     })
@@ -111,3 +127,4 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
       "name": user.Username,
     },
   })
+}
