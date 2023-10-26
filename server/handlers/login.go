@@ -3,13 +3,13 @@ package handlers
 import (
 	"database/sql"
 	"log"
+	"messageinabottle/dataaccess"
 	"messageinabottle/models"
 	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // generates jwt token and returns it to client
@@ -22,22 +22,15 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
-	var hashedSaltedPassword string
-	statement := `SELECT password_hash_salted FROM USER_ WHERE username = $1`
-	row := db.QueryRow(statement, user.Username)
-	err := row.Scan(&hashedSaltedPassword)
-
-  if err != nil {
-    log.Default().Println(err.Error())
-    return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-      "error": "Invalid credentials",
+  if dataaccess.UserExists(db, user.Username) && dataaccess.IsOnCooldown(db, &user) {
+    return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+      "error": "On cooldown",
     })
   }
 
-	err = bcrypt.CompareHashAndPassword([]byte(hashedSaltedPassword), []byte(user.Password))
-
-	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+	if !dataaccess.PasswordMatchesHash(db, &user) {
+    dataaccess.UpdateAttemptStatus(db, &user, true)
+    return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
       "error": "Invalid credentials",
     })
 	}
@@ -68,6 +61,8 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     Expires: time.Now().Add(7 * 24 * time.Hour),
     HTTPOnly: true,
   })
+
+  dataaccess.UpdateAttemptStatus(db, &user, false)
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
     "success": "true",

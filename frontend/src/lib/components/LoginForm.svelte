@@ -6,6 +6,7 @@
 
   const ACCEPTED = 202
   const UNAUTHORIZED = 401
+  const TOOMANYREQUESTS = 429
   const INTERNALSERVERERROR = 500
 
   let loginStatus: number;
@@ -42,6 +43,9 @@
   />
   {#if loginStatus === UNAUTHORIZED}
     <SubmitError>Invalid credentials</SubmitError>
+  {/if}
+  {#if loginStatus === TOOMANYREQUESTS}
+    <SubmitError>Too many attempts. Please wait a few moments.</SubmitError>
   {/if}
   {#if loginStatus === INTERNALSERVERERROR}
     <SubmitError>Something went wrong. Try again later.</SubmitError>

@@ -25,6 +25,10 @@
       <SignupForm />
     </Modal>
     {/if}
+    {#if $user}
+      <p>you are logged in as {$user.name}</p>
+    {/if}
+
   </nav>
 	<slot />
 </div>
@@ -70,6 +74,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2em;
+    width: 70%;
   }
 
 	:global(.form-input) {

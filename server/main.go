@@ -30,6 +30,7 @@ func main() {
 	db := services.ConnectDB(connStr)
 
   app.Use(logger.New())
+  log.SetFlags(log.Lshortfile)
   app.Use(cors.New(cors.Config{
     AllowOrigins: "http://localhost:5173",
     AllowHeaders:  "Origin, Content-Type, Accept",
