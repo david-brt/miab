@@ -4,9 +4,12 @@
   import Modal from '$lib/components/Modal.svelte';
   import type { LayoutData } from './$types';
   import { showModal, user } from '$lib/stores';
+  import DropdownForm from '$lib/components/DropdownForm.svelte';
 
   export let data: LayoutData;
   user.set(data.user);
+
+  let showPopup = false;
 
   function onClick(modalType: keyof typeof $showModal) {
     showModal.set(modalType, true);
@@ -30,10 +33,13 @@
 
     <div>
       {#if $user}
-        <button on:click={() => console.log($user.name)}>{$user.name}</button>
+        <button on:click={() => (showPopup = true)}>{$user.name}</button>
       {/if}
     </div>
   </nav>
+  {#if showPopup}
+    <DropdownForm bind:showPopup />
+  {/if}
   <slot />
 </div>
 
@@ -46,16 +52,14 @@
     padding: 0;
     overflow: hidden;
     background-color: var(--col1);
-    --bg-yellow: #fffce6;
-    --pastel-yellow: #fffba6;
-    --brownish-yellow: #a37b00;
-    --orange: #ffa540;
-    --almost-red: #ff605b;
     --border-radius: 0.5em;
-    --orange: #f79b24;
+    --border-width: 0.2em;
     --col1: #264653;
     --col2: #e9c46a;
     --col3: #e76f51;
+    --col4: rgb(147, 147, 229);
+    --pastel-yellow: #fffba6;
+
     --error-red: #c1121f;
   }
   :global(button) {
@@ -100,6 +104,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 1em;
   }
 
   :global(text) {
@@ -107,7 +112,6 @@
   }
 
   .navbar {
-    padding: 1em;
     display: flex;
     gap: 1em;
     justify-content: space-between;
