@@ -32,7 +32,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
   }
 
 	if !dataaccess.PasswordMatchesHash(db, &user) {
-    dataaccess.UpdateAttemptStatus(db, &user)
+    dataaccess.UpdateAttemptStatus(db, &user, true)
     return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
       "error": "Invalid credentials",
     })
@@ -64,6 +64,8 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     Expires: time.Now().Add(7 * 24 * time.Hour),
     HTTPOnly: true,
   })
+
+  dataaccess.UpdateAttemptStatus(db, &user, false)
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
     "success": "true",

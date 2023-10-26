@@ -42,9 +42,14 @@ func IsOnCooldown(db *sql.DB, user *models.User) bool  {
   return false
 }
 
-// updates latest_login_attempt to CURRENT_TIMESTAMP and increments failed_login_attempts by 1
-func UpdateAttemptStatus(db *sql.DB, user *models.User) {
-  statement := `UPDATE User_ SET latest_login_attempt = CURRENT_TIMESTAMP, failed_login_attempts = failed_login_attempts + 1 WHERE username = $1`
+// - updates latest_login_attempt to CURRENT_TIMESTAMP and increments failed_login_attempts by 1
+// - if increment is true, adds 1 to failed_login_attempts, else resets to 0
+func UpdateAttemptStatus(db *sql.DB, user *models.User, increment bool) {
+  statement := `UPDATE User_ SET latest_login_attempt = CURRENT_TIMESTAMP, failed_login_attempts = 0 WHERE username = $1`
+  if increment {
+    statement = `UPDATE User_ SET latest_login_attempt = CURRENT_TIMESTAMP, failed_login_attempts = failed_login_attempts + 1 WHERE username = $1`
+  }
+
   _, err := db.Exec(statement, user.Username)
   if err != nil {
     log.Default().Println(err.Error())
