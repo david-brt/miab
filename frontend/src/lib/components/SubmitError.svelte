@@ -9,5 +9,6 @@
 <style>
   .submit-error {
     color: var(--error-red);
+    word-wrap: break-word;
   }
 </style>

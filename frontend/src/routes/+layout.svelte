@@ -70,6 +70,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2em;
+    width: 70%;
   }
 
 	:global(.form-input) {
