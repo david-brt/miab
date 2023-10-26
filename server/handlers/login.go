@@ -22,10 +22,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
-  if !dataaccess.UserExists(db, user.Username) {
-  }
-
-  if dataaccess.IsOnCooldown(db, &user) {
+  if dataaccess.UserExists(db, user.Username) && dataaccess.IsOnCooldown(db, &user) {
     return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
       "error": "On cooldown",
     })
