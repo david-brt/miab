@@ -40,6 +40,12 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return handlers.IndexHandler(c, db)
 	})
+
+	app.Get("/logout", func(c *fiber.Ctx) error {
+		c.ClearCookie("auth_token")
+		return nil
+	})
+
 	app.Post("/login", func(c *fiber.Ctx) error {
 		return handlers.LoginHandler(c, db)
 	})

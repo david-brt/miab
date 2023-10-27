@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { PUBLIC_DATA_ROUTE } from '$env/static/public';
+  import { user } from '$lib/stores';
   import { clickOutside } from '$lib/utils/clickOutside';
   export let showPopup = false;
-
-  $: console.log(showPopup);
 
   function handleKeyDown(e: KeyboardEvent) {
     console.log('hi');
@@ -12,6 +12,16 @@
   }
   function handleClickOutside(event: Event) {
     showPopup = false;
+  }
+
+  async function logout() {
+    const response = await fetch(`${PUBLIC_DATA_ROUTE}/logout`, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include'
+    });
+
+    user.set(undefined);
   }
 </script>
 
@@ -26,7 +36,7 @@
       <p class="list-item">change username</p>
     </li>
     <li>
-      <p class="list-item">logout</p>
+      <p class="list-item" on:click={logout}>logout</p>
     </li>
     <li>
       <p class="list-item">DELETE</p>

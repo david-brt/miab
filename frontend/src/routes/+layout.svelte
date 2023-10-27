@@ -37,7 +37,7 @@
       {/if}
     </div>
   </nav>
-  {#if showPopup}
+  {#if showPopup && $user}
     <DropdownForm bind:showPopup />
   {/if}
   <slot />
