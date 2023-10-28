@@ -2,25 +2,18 @@
   import { clickOutside } from '$lib/utils/clickOutside';
   export let showPopup = false;
 
-  $: console.log(showPopup);
-
   function handleKeyDown(e: KeyboardEvent) {
     console.log('hi');
     if (e.key === 'Escape') {
       showPopup = false;
     }
   }
-  function handleClickOutside(event: Event) {
+  function handleClickOutside() {
     showPopup = false;
   }
 </script>
 
-<div
-  class="popup"
-  on:keydown={handleKeyDown}
-  use:clickOutside
-  on:click_outside={handleClickOutside}
->
+<div class="popup" on:keydown={handleKeyDown} use:clickOutside on:clickoutside={handleClickOutside}>
   <ul class="list">
     <li>
       <p class="list-item">change username</p>
