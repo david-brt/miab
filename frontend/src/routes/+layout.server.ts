@@ -9,7 +9,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     }
   });
   if (response.ok) {
-    let { claims } = await response.json();
+    const { claims } = await response.json();
     return {
       user: {
         id: claims.sub,

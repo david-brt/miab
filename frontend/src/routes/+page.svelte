@@ -2,8 +2,6 @@
   import Modal from '$lib/components/Modal.svelte';
   import MessageForm from '$lib/components/MessageForm.svelte';
   import { showModal } from '$lib/stores';
-
-  import type { Message } from '../../types/message';
   import { PUBLIC_DATA_ROUTE } from '$env/static/public';
 
   export let data;
@@ -11,7 +9,6 @@
   async function fetchNewMessage() {
     const response = await fetch(PUBLIC_DATA_ROUTE);
     data.message = await response.json();
-    console.log('got new Message');
   }
 </script>
 
