@@ -63,7 +63,7 @@ func main() {
 		return handlers.InsertMessageHandler(c, db)
 	})
 
-	authorized.Post("/signup", func(c *fiber.Ctx) error {
+	api.Post("/signup", func(c *fiber.Ctx) error {
 		return handlers.SignupHandler(c, db)
 	})
 

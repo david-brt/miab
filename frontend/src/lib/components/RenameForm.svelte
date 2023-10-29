@@ -12,7 +12,7 @@
   let loginStatus: number;
 
   async function callHandleSubmit(e: SubmitEvent) {
-    const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/rename`);
+    const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/authorized/rename`);
     loginStatus = response.status;
     if (loginStatus === ACCEPTED) {
       const responseBody = await response.json();
@@ -31,26 +31,6 @@
     placeholder="new username"
     value=""
     maxlength="34"
-    class="form-input"
-  />
-  <label for="old-username-input" class="form-label">name</label>
-  <input
-    name="username"
-    id="old-username-input"
-    type="text"
-    placeholder="old username"
-    value=""
-    maxlength="34"
-    class="form-input"
-  />
-  <label for="password-input" class="form-label">password</label>
-  <input
-    name="password"
-    id="password-input"
-    type="password"
-    placeholder="password"
-    value=""
-    maxlength="72"
     class="form-input"
   />
   {#if loginStatus === UNAUTHORIZED}
