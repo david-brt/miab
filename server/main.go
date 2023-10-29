@@ -25,12 +25,15 @@ func main() {
 		}
 	}
 
-	verficationMiddleware := jwtware.New(jwtware.Config{
+	verificationMiddleware := jwtware.New(jwtware.Config{
 		SigningKey: jwtware.SigningKey{
 			Key:    []byte(os.Getenv("JWT_SECRET")),
 			JWTAlg: jwtware.HS256,
 		},
+		TokenLookup: "header:Authorization, cookie:auth_token",
+		AuthScheme:  "Bearer",
 	})
+
 	cors := cors.New(cors.Config{
 		AllowOrigins:     "http://localhost:5173",
 		AllowHeaders:     "Origin, Content-Type, Accept",
@@ -39,7 +42,7 @@ func main() {
 
 	app := fiber.New()
 	api := app.Group("/api", cors, logger.New())
-	authorized := api.Group("/authorized", verficationMiddleware)
+	authorized := api.Group("/authorized", verificationMiddleware)
 
 	connStr := "postgresql://postgres:postgres@db/messageinabottle?sslmode=disable"
 	db := services.ConnectDB(connStr)
