@@ -1,6 +1,6 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public';
-  import { user } from '$lib/stores';
+  import { showModal, user } from '$lib/stores';
   import { clickOutside } from '$lib/utils/clickOutside';
   export let showPopup = false;
 
@@ -11,6 +11,10 @@
   }
   function handleClickOutside() {
     showPopup = false;
+  }
+
+  function openRenameModal() {
+    showModal.set('namechange', true);
   }
 
   async function logout() {
@@ -27,7 +31,7 @@
 <div class="popup" on:keydown={handleKeyDown} use:clickOutside on:clickoutside={handleClickOutside}>
   <ul class="list">
     <li class="list-item">
-      <button class="dropdown-option">
+      <button class="dropdown-option" on:click={openRenameModal}>
         <span>change username</span>
       </button>
     </li>

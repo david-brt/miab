@@ -5,6 +5,7 @@
   import type { LayoutData } from './$types';
   import { showModal, user } from '$lib/stores';
   import Dropdown from '$lib/components/Dropdown.svelte';
+  import RenameForm from '$lib/components/RenameForm.svelte';
 
   export let data: LayoutData;
   user.set(data.user);
@@ -40,6 +41,9 @@
   {#if showPopup}
     <Dropdown bind:showPopup />
   {/if}
+  <Modal modalType={'namechange'}>
+    <RenameForm />
+  </Modal>
   <slot />
 </div>
 

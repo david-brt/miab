@@ -71,6 +71,10 @@ func main() {
 		return handlers.VerifyTokenHandler(c)
 	})
 
+	authorized.Post("/rename", func(c *fiber.Ctx) error {
+		return handlers.RenameHandler(c, db)
+	})
+
 	port := os.Getenv("PORT")
 	log.Fatalln(app.Listen(fmt.Sprintf(":%v", port)))
 }

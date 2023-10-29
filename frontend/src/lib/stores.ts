@@ -6,7 +6,8 @@ function createShowModal() {
   const { subscribe, update } = writable({
     login: false,
     signup: false,
-    message: false
+    message: false,
+    namechange: false
   });
   return {
     subscribe,
