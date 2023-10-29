@@ -7,7 +7,7 @@
   export let data;
 
   async function fetchNewMessage() {
-    const response = await fetch(PUBLIC_DATA_ROUTE);
+    const response = await fetch(`${PUBLIC_DATA_ROUTE}/global-message`);
     data.message = await response.json();
   }
 </script>
