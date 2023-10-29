@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
 
-type ModalType = 'login' | 'signup' | 'message';
+type ModalType = 'login' | 'signup' | 'message' | 'namechange';
 
 function createShowModal() {
   const { subscribe, update } = writable({
