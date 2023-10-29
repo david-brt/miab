@@ -14,12 +14,12 @@
   }
 
   async function logout() {
-    const response = await fetch(`${PUBLIC_DATA_ROUTE}/logout`, {
+    await fetch(`${PUBLIC_DATA_ROUTE}/logout`, {
       method: 'GET',
       mode: 'cors',
       credentials: 'include'
     });
-
+    showPopup = false;
     user.set(undefined);
   }
 </script>
@@ -27,10 +27,14 @@
 <div class="popup" on:keydown={handleKeyDown} use:clickOutside on:clickoutside={handleClickOutside}>
   <ul class="list">
     <li class="list-item">
-      <p>change username</p>
+      <button class="dropdown-option">
+        <span>change username</span>
+      </button>
     </li>
-    <li>
-      <p class="list-item" on:click={logout}>logout</p>
+    <li class="list-item">
+      <button class="dropdown-option" on:click={logout}>
+        <span>logout</span>
+      </button>
     </li>
   </ul>
 </div>
@@ -43,8 +47,8 @@
     top: 7em; /* Adjust as needed */
     right: 1em;
     border-radius: var(--border-radius);
-    width: 16em;
   }
+
   .list {
     list-style-type: none;
     color: black;
@@ -55,12 +59,15 @@
 
   .list-item {
     transition: background-color 0.2s;
-    padding: 0.5em 1em 0.5em 1em;
     border-radius: 0.5em;
   }
 
-  .list-item p {
-    margin: 0;
+  .dropdown-option {
+    all: unset;
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+    width: 100%;
+    height: 100%;
   }
 
   .list-item:hover {
