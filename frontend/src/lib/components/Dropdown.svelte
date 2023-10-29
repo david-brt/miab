@@ -3,7 +3,6 @@
   export let showPopup = false;
 
   function handleKeyDown(e: KeyboardEvent) {
-    console.log('hi');
     if (e.key === 'Escape') {
       showPopup = false;
     }
