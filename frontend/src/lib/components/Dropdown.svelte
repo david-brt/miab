@@ -5,12 +5,11 @@
   export let showPopup = false;
 
   function handleKeyDown(e: KeyboardEvent) {
-    console.log('hi');
     if (e.key === 'Escape') {
       showPopup = false;
     }
   }
-  function handleClickOutside(event: Event) {
+  function handleClickOutside() {
     showPopup = false;
   }
 
@@ -25,21 +24,13 @@
   }
 </script>
 
-<div
-  class="popup"
-  on:keydown={handleKeyDown}
-  use:clickOutside
-  on:click_outside={handleClickOutside}
->
+<div class="popup" on:keydown={handleKeyDown} use:clickOutside on:clickoutside={handleClickOutside}>
   <ul class="list">
-    <li>
-      <p class="list-item">change username</p>
+    <li class="list-item">
+      <p>change username</p>
     </li>
     <li>
       <p class="list-item" on:click={logout}>logout</p>
-    </li>
-    <li>
-      <p class="list-item">DELETE</p>
     </li>
   </ul>
 </div>
@@ -51,21 +42,25 @@
     position: fixed;
     top: 7em; /* Adjust as needed */
     right: 1em;
-    padding: 1em;
     border-radius: var(--border-radius);
-    width: 13em;
-    border: var(--border-width) none black;
+    width: 16em;
   }
   .list {
     list-style-type: none;
     color: black;
     font-size: 1.5em;
+    margin: 0;
     padding: 0;
   }
 
   .list-item {
     transition: background-color 0.2s;
-    border-radius: var(--border-radius);
+    padding: 0.5em 1em 0.5em 1em;
+    border-radius: 0.5em;
+  }
+
+  .list-item p {
+    margin: 0;
   }
 
   .list-item:hover {

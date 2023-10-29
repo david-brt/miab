@@ -4,7 +4,7 @@
   import Modal from '$lib/components/Modal.svelte';
   import type { LayoutData } from './$types';
   import { showModal, user } from '$lib/stores';
-  import DropdownForm from '$lib/components/DropdownForm.svelte';
+  import Dropdown from '$lib/components/Dropdown.svelte';
 
   export let data: LayoutData;
   user.set(data.user);
@@ -37,8 +37,8 @@
       {/if}
     </div>
   </nav>
-  {#if showPopup && $user}
-    <DropdownForm bind:showPopup />
+  {#if showPopup}
+    <Dropdown bind:showPopup />
   {/if}
   <slot />
 </div>
@@ -57,7 +57,7 @@
     --col1: #264653;
     --col2: #e9c46a;
     --col3: #e76f51;
-    --col4: rgb(147, 147, 229);
+    --col4: #457b9d;
     --pastel-yellow: #fffba6;
 
     --error-red: #c1121f;
