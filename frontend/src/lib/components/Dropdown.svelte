@@ -18,7 +18,7 @@
   }
 
   async function logout() {
-    await fetch(`${PUBLIC_DATA_ROUTE}/logout`, {
+    await fetch(`${PUBLIC_DATA_ROUTE}/authorized/logout`, {
       method: 'GET',
       mode: 'cors',
       credentials: 'include'

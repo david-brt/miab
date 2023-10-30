@@ -53,9 +53,8 @@ func main() {
 		return handlers.IndexHandler(c, db)
 	})
 
-	api.Get("/logout", func(c *fiber.Ctx) error {
-		c.ClearCookie("auth_token")
-		return nil
+	authorized.Get("/logout", func(c *fiber.Ctx) error {
+    return handlers.LogoutHandler(c)
 	})
 
 	api.Post("/login", func(c *fiber.Ctx) error {
