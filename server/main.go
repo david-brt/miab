@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"messageinabottle/handlers"
+	"messageinabottle/routes"
 	"messageinabottle/services"
 	"os"
 
@@ -41,7 +41,7 @@ func main() {
 	})
 
 	app := fiber.New()
-	api := app.Group("/api", cors, logger.New())
+	api := app.Group("api", cors, logger.New())
 	authorized := api.Group("/authorized", verificationMiddleware)
 
 	connStr := "postgresql://postgres:postgres@db/messageinabottle?sslmode=disable"
@@ -49,33 +49,8 @@ func main() {
 
 	log.SetFlags(log.Lshortfile)
 
-	api.Get("/global-message", func(c *fiber.Ctx) error {
-		return handlers.IndexHandler(c, db)
-	})
-
-	authorized.Get("/logout", func(c *fiber.Ctx) error {
-    return handlers.LogoutHandler(c)
-	})
-
-	api.Post("/login", func(c *fiber.Ctx) error {
-		return handlers.LoginHandler(c, db)
-	})
-
-	api.Post("/send-message", func(c *fiber.Ctx) error {
-		return handlers.InsertMessageHandler(c, db)
-	})
-
-	api.Post("/signup", func(c *fiber.Ctx) error {
-		return handlers.SignupHandler(c, db)
-	})
-
-	authorized.Get("/verify-token", func(c *fiber.Ctx) error {
-		return handlers.VerifyTokenHandler(c)
-	})
-
-	authorized.Post("/rename", func(c *fiber.Ctx) error {
-		return handlers.RenameHandler(c, db)
-	})
+	routes.Unauthorized(db, api)
+	routes.Authorized(db, authorized)
 
 	port := os.Getenv("PORT")
 	log.Fatalln(app.Listen(fmt.Sprintf(":%v", port)))
