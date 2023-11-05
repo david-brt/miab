@@ -20,11 +20,15 @@ func SignupHandler(c *fiber.Ctx, db *sql.DB) error {
 		})
 	}
 
-	validPassword := utils.IsValidPassword(user.Password)
-
-	if !validPassword {
+	if !utils.IsValidPassword(user.Password) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid password",
+		})
+	}
+
+	if !utils.IsValidUsername(user.Username) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid username",
 		})
 	}
 
