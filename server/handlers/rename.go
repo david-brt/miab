@@ -3,10 +3,9 @@ package handlers
 import (
 	"database/sql"
 	"log"
-
+	"messageinabottle/utils"
 
 	"github.com/gofiber/fiber/v2"
-
 )
 
 func RenameHandler(c *fiber.Ctx, db *sql.DB) error {
@@ -15,7 +14,6 @@ func RenameHandler(c *fiber.Ctx, db *sql.DB) error {
 		Username string `json:"username"`
 	}
 
-	// Überprüfe, ob der Request-Body ein JSON ist und parsen ihn
 	if err := c.BodyParser(&requestData); err != nil {
 		log.Printf("Fehler beim Parsen des Request-Bodys: %v", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -23,7 +21,11 @@ func RenameHandler(c *fiber.Ctx, db *sql.DB) error {
 		})
 	}
 
-	// Du kannst jetzt auf den Nutzernamen zugreifen, der im Request gesendet wurde
+	if !utils.IsValidUsername(requestData.Username) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid username",
+		})
+	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"success": "User renamed",
