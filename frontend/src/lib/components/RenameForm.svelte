@@ -30,7 +30,7 @@
     type="text"
     placeholder="new username"
     value=""
-    maxlength="34"
+    maxlength="20"
     class="form-input"
   />
   {#if loginStatus === UNAUTHORIZED}

@@ -17,13 +17,15 @@ func RenameHandler(c *fiber.Ctx, db *sql.DB) error {
 	if err := c.BodyParser(&requestData); err != nil {
 		log.Printf("Fehler beim Parsen des Request-Bodys: %v", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Ungültiger Request-Body",
+			"error": "Invalid request body",
+      "errorMessage": "Something went wrong, try again later",
 		})
 	}
 
 	if !utils.IsValidUsername(requestData.Username) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid username",
+			"errorMessage": "Please only use letters, numbers and underscores",
 		})
 	}
 

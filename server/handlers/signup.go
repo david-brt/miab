@@ -15,26 +15,30 @@ func SignupHandler(c *fiber.Ctx, db *sql.DB) error {
 	user := models.User{}
 	if err := c.BodyParser(&user); err != nil {
 		log.Default().Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Wrong format",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid Rquest Body",
+      "errorMessage": "Something went wrong, try again later",
 		})
 	}
 
 	if !utils.IsValidPassword(user.Password) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid password",
+      "errorMessage": "Password must contain at least eight characters including an uppercase and a lowercase letter, a number and a special character (#?!@$ %^&*)",
 		})
 	}
 
 	if !utils.IsValidUsername(user.Username) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid username",
+			"errorMessage": "Please only use letters, numbers and underscores",
 		})
 	}
 
 	if dataaccess.UserExists(db, user.Username) {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"error": "User exists",
+			"errorMessage": "Username is already taken",
 		})
 	}
 
@@ -44,6 +48,7 @@ func SignupHandler(c *fiber.Ctx, db *sql.DB) error {
 		log.Default().Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Could not process entity",
+			"errorMessage": "Something went wrong, try again later",
 		})
 	}
 
@@ -54,6 +59,7 @@ func SignupHandler(c *fiber.Ctx, db *sql.DB) error {
 		log.Default().Println(err.Error())
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Could not process entity",
+			"errorMessage": "Something went wrong, try again later",
 		})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
