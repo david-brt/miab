@@ -5,7 +5,6 @@
   import SubmitError from './SubmitError.svelte';
 
   const CREATED = 201;
-  const ACCEPTED = 202;
 
   let signupStatus: number;
   let responseData: { [index: string]: string };
@@ -37,6 +36,7 @@
     id="username-input"
     type="text"
     placeholder="username"
+    required
     bind:value={username}
     maxlength="20"
     class="form-input"
@@ -46,9 +46,12 @@
     name="password"
     id="password-input"
     type="password"
+    required
     placeholder="password"
     bind:value={password}
+    minlength="8"
     maxlength="50"
+    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
   <label for="password-retype" class="form-label">password</label>
@@ -56,9 +59,12 @@
     name="retyped"
     id="password-retype"
     type="password"
+    required
     placeholder="retype password"
     bind:value={retyped_password}
-    maxlength="72"
+    minlength="8"
+    maxlength="50"
+    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
   <SubmitError>{responseData?.errorMessage || ''}</SubmitError>

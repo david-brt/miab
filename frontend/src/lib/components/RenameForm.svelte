@@ -28,6 +28,7 @@
     name="username"
     id="new-username-input"
     type="text"
+    required
     placeholder="new username"
     value=""
     maxlength="20"
