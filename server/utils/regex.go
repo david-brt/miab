@@ -20,7 +20,7 @@ func IsValidPassword(password string) bool {
 	upperCase := regexp.MustCompile(`[A-Z]`)
 	lowerCase := regexp.MustCompile(`[a-z]`)
 	digit := regexp.MustCompile(`[0-9]`)
-	specialChar := regexp.MustCompile(`[#?!@$ %^&*-]`)
+	specialChar := regexp.MustCompile(`[#?!@$ %^&*]`)
 
 	regexes := []*regexp.Regexp{
 		upperCase,
@@ -37,6 +37,6 @@ func IsValidPassword(password string) bool {
 }
 
 func IsValidUsername(username string) bool {
-	regex := regexp.MustCompile(`^[a-z0-9_-]{1,20}$`)
+	regex := regexp.MustCompile(`^[a-zA-Z0-9_]{1,20}$`)
 	return regex.MatchString(username)
 }

@@ -39,6 +39,7 @@
     required
     bind:value={username}
     maxlength="20"
+    pattern="^[a-zA-Z0-9_]+$"
     class="form-input"
   />
   <label for="password-input" class="form-label">password</label>
@@ -67,6 +68,8 @@
     pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
-  <SubmitError>{responseData?.errorMessage || ''}</SubmitError>
+  {#if responseData?.error}
+    <SubmitError>{responseData?.errorMessage || ''}</SubmitError>
+  {/if}
   <button class="send-button">send</button>
 </form>

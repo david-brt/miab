@@ -32,6 +32,7 @@
     placeholder="new username"
     value=""
     maxlength="20"
+    pattern="^[a-zA-Z0-9_]+$"
     class="form-input"
   />
   {#if loginStatus === UNAUTHORIZED}
