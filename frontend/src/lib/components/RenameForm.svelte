@@ -2,7 +2,7 @@
   import SubmitError from './SubmitError.svelte';
   import { PUBLIC_DATA_ROUTE } from '$env/static/public';
   import { handleSubmit } from '$lib/utils/form';
-  import { showModal, user } from '../stores';
+  import { showModal, user, token } from '../stores';
 
   const ACCEPTED = 202;
   const UNAUTHORIZED = 401;
@@ -12,7 +12,7 @@
   let loginStatus: number;
 
   async function callHandleSubmit(e: SubmitEvent) {
-    const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/authorized/rename`);
+    const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/authorized/rename`, $token);
     loginStatus = response.status;
     if (loginStatus === ACCEPTED) {
       const responseBody = await response.json();

@@ -6,6 +6,7 @@ import (
 	"messageinabottle/handlers"
 	"messageinabottle/services"
 	"os"
+	"time"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -30,10 +31,11 @@ func main() {
 			Key:    []byte(os.Getenv("JWT_SECRET")),
 			JWTAlg: jwtware.HS256,
 		},
+		
 	})
 	cors := cors.New(cors.Config{
 		AllowOrigins:     "http://localhost:5173",
-		AllowHeaders:     "Origin, Content-Type, Accept",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	})
 
@@ -51,7 +53,12 @@ func main() {
 	})
 
 	api.Get("/logout", func(c *fiber.Ctx) error {
-		c.ClearCookie("auth_token")
+		c.Cookie(&fiber.Cookie{
+			Name: "auth_token",
+			Value:  "lol",           
+			Path:   "/",          
+			Expires: time.Now().Add(-1 * time.Hour),
+		})
 		return nil
 	})
 

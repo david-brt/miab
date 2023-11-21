@@ -22,6 +22,7 @@ func RenameHandler(c *fiber.Ctx, db *sql.DB) error {
 			"message": "Ungültiger Request-Body",
 		})
 	}
+	log.Default().Println(requestData)
 
 	// Du kannst jetzt auf den Nutzernamen zugreifen, der im Request gesendet wurde
 
