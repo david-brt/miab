@@ -28,18 +28,10 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 		})
 	}
 
-	
-  	statement := `Select id from user_ where username = $1; `
 
-    // Execute QueryRow to retrieve a single row result
-    row := db.QueryRow(statement, user.Username)
+  	
 
-    // Scan the retrieved ID into the variable
-	var userID int
-    err := row.Scan(&userID)
-    if err != nil {
-        return err
-    }
+	userID,err := dataaccess.GetUserId(db, user.Username)
 	user.ID = userID
 
 	if !dataaccess.PasswordMatchesHash(db, &user) {
