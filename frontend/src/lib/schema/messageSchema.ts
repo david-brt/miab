@@ -1,6 +1,6 @@
 import { object, string } from 'yup';
 
-export const signupSchema = object({
+export const messageSchema = object({
   message: string()
     .min(5, 'Type at least 5 characters')
     .max(240, 'Please limit yourself to 240 characters')

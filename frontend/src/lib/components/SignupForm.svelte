@@ -1,6 +1,7 @@
 <script lang="ts">
   import { PUBLIC_DATA_ROUTE } from '$env/static/public';
   import { handleSubmit } from '$lib/utils/form';
+  import { signupSchema } from '$lib/schema/signupSchema';
   import { showModal } from '../stores';
   import SubmitError from './SubmitError.svelte';
 
@@ -13,6 +14,12 @@
   let retyped_password = '';
 
   async function onSubmit(e: SubmitEvent) {
+    const formData = new FormData(e.target as HTMLFormElement);
+    signupSchema
+      .validate(formData)
+      .then((valid) => console.log(valid))
+      .catch((err) => console.log(err));
+
     if (password === retyped_password) {
       const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`);
 
@@ -39,7 +46,6 @@
     required
     bind:value={username}
     maxlength="20"
-    pattern="^[a-zA-Z0-9_]+$"
     class="form-input"
   />
   <label for="password-input" class="form-label">password</label>
@@ -52,7 +58,6 @@
     bind:value={password}
     minlength="8"
     maxlength="50"
-    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
   <label for="password-retype" class="form-label">password</label>
@@ -65,7 +70,6 @@
     bind:value={retyped_password}
     minlength="8"
     maxlength="50"
-    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
   {#if responseData?.error}

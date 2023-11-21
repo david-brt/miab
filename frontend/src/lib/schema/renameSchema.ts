@@ -1,6 +1,6 @@
 import { object } from 'yup';
 import { usernameString } from './username';
 
-export const signupSchema = object({
+export const renameSchema = object({
   username: usernameString
 });
