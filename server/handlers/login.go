@@ -22,11 +22,25 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
     })
 	}
 
-  if dataaccess.UserExists(db, user.Username) && dataaccess.IsOnCooldown(db, &user) {
-    return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-      "error": "On cooldown",
-    })
-  }
+	if dataaccess.UserExists(db, user.Username) && dataaccess.IsOnCooldown(db, &user) {
+		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+		"error": "On cooldown",
+		})
+	}
+
+	
+  	statement := `Select id from user_ where username = $1; `
+
+    // Execute QueryRow to retrieve a single row result
+    row := db.QueryRow(statement, user.Username)
+
+    // Scan the retrieved ID into the variable
+	var userID int
+    err := row.Scan(&userID)
+    if err != nil {
+        return err
+    }
+	user.ID = userID
 
 	if !dataaccess.PasswordMatchesHash(db, &user) {
     dataaccess.UpdateAttemptStatus(db, &user, true)
