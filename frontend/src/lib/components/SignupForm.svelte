@@ -52,7 +52,6 @@
     bind:value={password}
     minlength="8"
     maxlength="50"
-    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
   <label for="password-retype" class="form-label">password</label>
@@ -65,7 +64,6 @@
     bind:value={retyped_password}
     minlength="8"
     maxlength="50"
-    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*])$ "
     class="form-input"
   />
   {#if responseData?.error}
