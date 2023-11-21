@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"database/sql"
-	"log"
 	"messageinabottle/dataaccess"
+	"messageinabottle/errors"
 	"messageinabottle/models"
 	"os"
 	"time"
@@ -16,29 +16,19 @@ import (
 func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 	user := models.User{}
 	if err := c.BodyParser(&user); err != nil {
-    log.Default().Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-      "error": "Wrong format",
-    })
+		return errors.ParsingError(c, err)
 	}
 
 	if dataaccess.UserExists(db, user.Username) && dataaccess.IsOnCooldown(db, &user) {
-		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-		"error": "On cooldown",
-		})
+		return errors.TooManyRequestsError(c)
 	}
-
-
-  	
 
 	userID,err := dataaccess.GetUserId(db, user.Username)
 	user.ID = userID
 
 	if !dataaccess.PasswordMatchesHash(db, &user) {
-    dataaccess.UpdateAttemptStatus(db, &user, true)
-    return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-      "error": "Invalid credentials",
-    })
+		dataaccess.UpdateAttemptStatus(db, &user, true)
+		return errors.UnauthorizedError(c)
 	}
 
 	expirationDate := time.Now().Add(time.Hour * 24 * 14)
@@ -55,26 +45,23 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 		})
 	s, err := t.SignedString(key)
 	if err != nil {
-    log.Default().Println(err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-      "error": "Could not generate auth token",
-    })
+		return errors.InternalServerError(c, err)
 	}
 
-  c.Cookie(&fiber.Cookie{
-    Name: "auth_token",
-    Value: s,
-    Expires: time.Now().Add(7 * 24 * time.Hour),
-    HTTPOnly: true,
-  })
+	c.Cookie(&fiber.Cookie{
+		Name:     "auth_token",
+		Value:    s,
+		Expires:  time.Now().Add(7 * 24 * time.Hour),
+		HTTPOnly: true,
+	})
 
-  dataaccess.UpdateAttemptStatus(db, &user, false)
+	dataaccess.UpdateAttemptStatus(db, &user, false)
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-    "success": "true",
-    "user": fiber.Map{
-      "id": user.ID,
-      "name": user.Username,
-    },
-  })
+		"success": "true",
+		"user": fiber.Map{
+			"id":   user.ID,
+			"name": user.Username,
+		},
+	})
 }

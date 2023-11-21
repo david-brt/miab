@@ -1,75 +1,79 @@
 <script lang="ts">
-  import { PUBLIC_DATA_ROUTE } from '$env/static/public'
-  import { handleSubmit } from '$lib/utils/form'
-  import { showModal } from '../stores'
-	import SubmitError from './SubmitError.svelte';
+  import { PUBLIC_DATA_ROUTE } from '$env/static/public';
+  import { handleSubmit } from '$lib/utils/form';
+  import { signupSchema } from '$lib/schema/signupSchema';
+  import { showModal } from '../stores';
+  import SubmitError from './SubmitError.svelte';
 
-  const CREATED = 201
-  const ACCEPTED = 202
-  const CONFLICT = 409
-  const INTERNALSERVERERROR = 500
+  const CREATED = 201;
 
   let signupStatus: number;
+  let responseData: { [index: string]: string };
   let username = '';
   let password = '';
-  let retyped_password= '';
+  let retyped_password = '';
 
   async function onSubmit(e: SubmitEvent) {
-    if(password === retyped_password){
-      const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`)
+    const formData = new FormData(e.target as HTMLFormElement);
+    signupSchema
+      .validate(formData)
+      .then((valid) => console.log(valid))
+      .catch((err) => console.log(err));
 
-      signupStatus = response.status
+    if (password === retyped_password) {
+      const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`);
 
-      if(signupStatus === CREATED) {
-        username = ''
-        password = ''
-        retyped_password = ''
-		showModal.set('signup', false)
+      responseData = await response.json();
+      signupStatus = response.status;
+
+      if (signupStatus === CREATED) {
+        username = '';
+        password = '';
+        retyped_password = '';
+        showModal.set('signup', false);
       }
     }
   }
-
 </script>
 
 <form class="modal-form" on:submit|preventDefault={onSubmit}>
-	<label for="username-input" class="form-label">name</label>
-	<input
-		name="username"
-		id="username-input"
-		type="text"
-		placeholder="username"
-    	bind:value={username}
-		maxlength="34"
-		class="form-input"
-	/>
-	<label for="password-input" class="form-label">password</label>
-	<input
-		name="password"
-		id="password-input"
-		type="password"
-		placeholder="password"
-    	bind:value={password}
-		maxlength="72"
-		class="form-input"
-
-	/>
-	<label for="password-retype" class="form-label">password</label>
-	<input
-		name="retyped"
-		id="password-retype"
-		type="password"
-		placeholder="retype password"
-    	bind:value={retyped_password}
-		maxlength="72"
-		class="form-input"
-	/>
-	{#if signupStatus === CONFLICT}
-  	<SubmitError>Username already exists</SubmitError>
-	{/if}
-	{#if signupStatus === INTERNALSERVERERROR}
-		<SubmitError>Something went wrong. Try again later.</SubmitError>
-	{/if}
-	<button class="send-button">send</button>
-
-  
+  <label for="username-input" class="form-label">name</label>
+  <input
+    name="username"
+    id="username-input"
+    type="text"
+    placeholder="username"
+    required
+    bind:value={username}
+    maxlength="20"
+    class="form-input"
+  />
+  <label for="password-input" class="form-label">password</label>
+  <input
+    name="password"
+    id="password-input"
+    type="password"
+    required
+    placeholder="password"
+    bind:value={password}
+    minlength="8"
+    maxlength="50"
+    class="form-input"
+  />
+  <label for="password-retype" class="form-label">password</label>
+  <input
+    name="retyped"
+    id="password-retype"
+    type="password"
+    required
+    placeholder="retype password"
+    bind:value={retyped_password}
+    minlength="8"
+    maxlength="50"
+    class="form-input"
+  />
+  {#if responseData?.error}
+    <SubmitError>{responseData?.errorMessage || ''}</SubmitError>
+  {/if}
+  <button class="send-button">send</button>
 </form>
