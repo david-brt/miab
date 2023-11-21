@@ -11,10 +11,12 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
   if (response.ok) {
     const { claims } = await response.json();
     return {
-      user: {
-        id: claims.sub,
-        name: claims.name
-      }
+        user: {
+          id: claims.sub,
+          name: claims.name,
+        },
+        token: tokenString
+      
     };
   }
 };

@@ -74,3 +74,18 @@ func PasswordMatchesHash(db *sql.DB, user *models.User) bool {
   }
   return true
 }
+
+func GetUserId(db *sql.DB, username string) (int, error){
+  statement := `Select id from user_ where username = $1; `
+  
+  // Execute QueryRow to retrieve a single row result
+  row := db.QueryRow(statement, username)
+
+  // Scan the retrieved ID into the variable
+	var userID int
+    err := row.Scan(&userID)
+    if err != nil {
+        return 0,err
+    }
+  return userID,nil
+}

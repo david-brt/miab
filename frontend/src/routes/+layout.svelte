@@ -3,12 +3,13 @@
   import SignupForm from '$lib/components/SignupForm.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import type { LayoutData } from './$types';
-  import { showModal, user } from '$lib/stores';
+  import { showModal, user, token } from '$lib/stores';
   import Dropdown from '$lib/components/Dropdown.svelte';
   import RenameForm from '$lib/components/RenameForm.svelte';
 
   export let data: LayoutData;
   user.set(data.user);
+  token.set(data.token);
 
   let showPopup = false;
 
