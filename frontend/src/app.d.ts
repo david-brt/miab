@@ -8,11 +8,12 @@ declare global {
     // interface Platform {}
   }
   namespace svelteHTML {
-  interface HTMLAttributes<T> {
-    'on:clickoutside'?: (event: CustomEvent<T>) => void;
+    interface HTMLAttributes<T> {
+      'on:clickoutside'?: (event: CustomEvent<T>) => void;
+      'on:feltesuccess'?: (event: CustomEvent) => void;
+      'on:felteerror'?: (event: CustomEvent) => void;
+    }
   }
-}
-
 }
 
 export {};

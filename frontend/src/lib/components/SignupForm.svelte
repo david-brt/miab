@@ -1,42 +1,36 @@
 <script lang="ts">
-  import { PUBLIC_DATA_ROUTE } from '$env/static/public';
-  import { handleSubmit } from '$lib/utils/form';
-  import { signupSchema } from '$lib/schema/signupSchema';
+  import { createForm } from 'felte';
   import { showModal } from '../stores';
   import SubmitError from './SubmitError.svelte';
 
-  const CREATED = 201;
+  const { form: felteForm } = createForm({});
 
-  let signupStatus: number;
-  let responseData: { [index: string]: string };
+  async function handleSuccess(event: CustomEvent) {
+    const { response } = event.detail;
+    const responseBody = await response.json();
+    const data = JSON.parse(responseBody.data);
+    if (responseBody.type === 'failure') {
+      // a little hacky as $page.form only contains the response for the form on the route corresponding to the action name
+      // format returned by action is transformed in an odd way. might find a better solution later
+      formError = data[2];
+    } else {
+      showModal.set('signup', false);
+    }
+  }
+
+  let formError: undefined | string;
   let username = '';
   let password = '';
   let retyped_password = '';
-
-  async function onSubmit(e: SubmitEvent) {
-    const formData = new FormData(e.target as HTMLFormElement);
-    signupSchema
-      .validate(formData)
-      .then((valid) => console.log(valid))
-      .catch((err) => console.log(err));
-
-    if (password === retyped_password) {
-      const response = await handleSubmit(e, `${PUBLIC_DATA_ROUTE}/signup`);
-
-      responseData = await response.json();
-      signupStatus = response.status;
-
-      if (signupStatus === CREATED) {
-        username = '';
-        password = '';
-        retyped_password = '';
-        showModal.set('signup', false);
-      }
-    }
-  }
 </script>
 
-<form class="modal-form" on:submit|preventDefault={onSubmit}>
+<form
+  class="modal-form"
+  use:felteForm
+  action="?/signup"
+  method="post"
+  on:feltesuccess={handleSuccess}
+>
   <label for="username-input" class="form-label">name</label>
   <input
     name="username"
@@ -72,8 +66,8 @@
     maxlength="50"
     class="form-input"
   />
-  {#if responseData?.error}
-    <SubmitError>{responseData?.errorMessage || ''}</SubmitError>
+  {#if formError}
+    <SubmitError>{formError}</SubmitError>
   {/if}
-  <button class="send-button">send</button>
+  <button class="send-button" type="submit">send</button>
 </form>
