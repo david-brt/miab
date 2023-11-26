@@ -5,7 +5,7 @@ import { usernameString } from './username';
 export const signupSchema = object({
   username: usernameString,
   password: passwordString,
-  confirmPassword: string()
+  confirmation: string()
     .required('Please re-type your password')
     // oneOf matches one of the values inside the array.
     // "ref" gets the value of password.

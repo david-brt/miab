@@ -1,9 +1,19 @@
 <script lang="ts">
   import { createForm } from 'felte';
+  import type { InferType } from 'yup';
+  import { validator } from '@felte/validator-yup';
   import { showModal } from '../stores';
+  import { signupSchema } from '$lib/schema/signupSchema';
   import SubmitError from './SubmitError.svelte';
 
-  const { form: felteForm } = createForm({});
+  const { form: felteForm } = createForm<InferType<typeof signupSchema>>({
+    initialValues: {
+      username: '',
+      password: '',
+      confirmation: ''
+    },
+    extend: validator({ schema: signupSchema })
+  });
 
   async function handleSuccess(event: CustomEvent) {
     const { response } = event.detail;
@@ -19,9 +29,6 @@
   }
 
   let formError: undefined | string;
-  let username = '';
-  let password = '';
-  let retyped_password = '';
 </script>
 
 <form
@@ -38,7 +45,6 @@
     type="text"
     placeholder="username"
     required
-    bind:value={username}
     maxlength="20"
     class="form-input"
   />
@@ -49,19 +55,17 @@
     type="password"
     required
     placeholder="password"
-    bind:value={password}
     minlength="8"
     maxlength="50"
     class="form-input"
   />
   <label for="password-retype" class="form-label">password</label>
   <input
-    name="retyped"
+    name="confirmation"
     id="password-retype"
     type="password"
     required
     placeholder="retype password"
-    bind:value={retyped_password}
     minlength="8"
     maxlength="50"
     class="form-input"
