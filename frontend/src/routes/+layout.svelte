@@ -86,12 +86,13 @@
   :global(.modal-form) {
     display: flex;
     flex-direction: column;
-    gap: 2em;
+    gap: 1em;
     width: 70%;
   }
 
   :global(.form-input) {
     border: none;
+    flex: 1;
     border-radius: var(--border-radius);
     font-family: 'Lato';
     padding: 0.5em;
