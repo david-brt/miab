@@ -5,6 +5,7 @@
   import { showModal } from '../stores';
   import { signupSchema } from '$lib/schema/signupSchema';
   import FormField from './FormField.svelte';
+  import SubmitError from './SubmitError.svelte';
 
   const { form: felteForm, errors } = createForm<InferType<typeof signupSchema>>({
     initialValues: {
@@ -62,7 +63,10 @@
     placeholder="confirm password"
     minlength={8}
     maxlength={50}
-    inputErrors={$errors.confirmation}
+    inputErrors={$errors.password}
   />
   <button class="send-button" type="submit">send</button>
+  {#if formError}
+    <SubmitError>{formError}</SubmitError>
+  {/if}
 </form>
