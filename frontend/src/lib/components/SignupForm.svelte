@@ -2,18 +2,17 @@
   import { createForm } from 'felte';
   import type { InferType } from 'yup';
   import { validator } from '@felte/validator-yup';
-  import { reporter, ValidationMessage } from '@felte/reporter-svelte';
   import { showModal } from '../stores';
   import { signupSchema } from '$lib/schema/signupSchema';
-  import SubmitError from './SubmitError.svelte';
+  import FormField from './FormField.svelte';
 
-  const { form: felteForm } = createForm<InferType<typeof signupSchema>>({
+  const { form: felteForm, errors } = createForm<InferType<typeof signupSchema>>({
     initialValues: {
       username: '',
       password: '',
       confirmation: ''
     },
-    extend: [validator({ schema: signupSchema }), reporter]
+    extend: [validator({ schema: signupSchema })]
   });
 
   async function handleSuccess(event: CustomEvent) {
@@ -39,63 +38,31 @@
   method="post"
   on:feltesuccess={handleSuccess}
 >
-  <div class="input-container">
-    <label for="username-input" class="form-label">name</label>
-    <input
-      name="username"
-      id="username-input"
-      type="text"
-      placeholder="username"
-      required
-      maxlength="20"
-      class="form-input"
-    />
-    <ValidationMessage for="username" let:messages={message}>
-      <SubmitError>{message}</SubmitError>
-      <SubmitError slot="placeholder"></SubmitError>
-    </ValidationMessage>
-  </div>
-  <div class="input-container">
-    <label for="password-input" class="form-label">password</label>
-    <input
-      name="password"
-      id="password-input"
-      type="password"
-      required
-      placeholder="password"
-      minlength="8"
-      maxlength="50"
-      class="form-input"
-    />
-    <label for="password-retype" class="form-label">password</label>
-    <ValidationMessage for="password" let:messages={message}>
-      <SubmitError>{message}</SubmitError>
-      <SubmitError slot="placeholder"></SubmitError>
-    </ValidationMessage>
-  </div>
-  <div class="input-container">
-    <input
-      name="confirmation"
-      id="password-retype"
-      type="password"
-      required
-      placeholder="retype password"
-      minlength="8"
-      maxlength="50"
-      class="form-input"
-    />
-    <ValidationMessage for="confirmation" let:messages={message}>
-      <SubmitError>{message}</SubmitError>
-      <SubmitError slot="placeholder"></SubmitError>
-    </ValidationMessage>
-  </div>
+  <FormField
+    name="username"
+    type="text"
+    required
+    placeholder="username"
+    maxlength={50}
+    inputErrors={$errors.username}
+  />
+  <FormField
+    name="password"
+    type="password"
+    required
+    placeholder="password"
+    minlength={8}
+    maxlength={50}
+    inputErrors={$errors.password}
+  />
+  <FormField
+    name="confirmation"
+    type="password"
+    required
+    placeholder="confirm password"
+    minlength={8}
+    maxlength={50}
+    inputErrors={$errors.confirmation}
+  />
   <button class="send-button" type="submit">send</button>
 </form>
-
-<style>
-  .input-container {
-    display: flex;
-    gap: 0.5em;
-    flex-direction: column;
-  }
-</style>
