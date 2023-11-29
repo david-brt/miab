@@ -1,9 +1,12 @@
 import { INTERNAL_DATA_ROUTE } from '$env/static/private';
-import { fail, type LoadEvent } from '@sveltejs/kit';
+import type { LoadEvent } from '@sveltejs/kit';
 import type { Message } from '../../types/message';
 import type { Actions } from '@sveltejs/kit';
+import { submitForm } from '$lib/utils/submitForm';
 
+const OK = 200;
 const CREATED = 201;
+const ACCEPTED = 202;
 
 export async function load({ fetch }: LoadEvent) {
   const response = await fetch(`${INTERNAL_DATA_ROUTE}/global-message`);
@@ -15,31 +18,23 @@ export async function load({ fetch }: LoadEvent) {
 
 export const actions: Actions = {
   signup: async ({ request }) => {
-    const formData = await request.formData();
-    const formBody = {
-      username: formData.get('username'),
-      password: formData.get('password')
-    };
+    const response = await submitForm(request, '/signup', CREATED);
+    return response;
+  },
 
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
+  login: async ({ request }) => {
+    const response = await submitForm(request, '/login', ACCEPTED);
+    return response;
+  },
 
-    const response = await fetch(`${INTERNAL_DATA_ROUTE}/signup`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: headers,
-      body: JSON.stringify(formBody),
-      credentials: 'include'
-    });
+  'send-message': async ({ request }) => {
+    const response = await submitForm(request, '/send-message', OK);
+    return response;
+  },
 
-    const responseData = await response.json();
-    const signupStatus = response.status;
-
-    if (signupStatus === CREATED) {
-      return { success: true };
-    }
-
-    return fail(signupStatus, responseData);
+  rename: async ({ request, cookies }) => {
+    const token = cookies.get('auth_token');
+    const response = await submitForm(request, '/authorized/rename', ACCEPTED, token);
+    return response;
   }
 };
