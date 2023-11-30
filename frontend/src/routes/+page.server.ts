@@ -4,7 +4,6 @@ import type { Message } from '../../types/message';
 import type { Actions } from '@sveltejs/kit';
 import { submitForm } from '$lib/utils/submitForm';
 
-const OK = 200;
 const CREATED = 201;
 const ACCEPTED = 202;
 
@@ -28,7 +27,7 @@ export const actions: Actions = {
   },
 
   'send-message': async ({ request }) => {
-    const response = await submitForm(request, '/send-message', OK);
+    const response = await submitForm(request, '/send-message', ACCEPTED);
     return response;
   },
 

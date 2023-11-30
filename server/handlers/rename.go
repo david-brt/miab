@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"log"
 	"messageinabottle/errors"
 	"messageinabottle/utils"
 
@@ -23,7 +24,7 @@ func RenameHandler(c *fiber.Ctx, db *sql.DB) error {
 		return errors.MalformedUsernameError(c)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 		"success": "User renamed",
 	})
 

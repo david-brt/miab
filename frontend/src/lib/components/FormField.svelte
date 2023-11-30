@@ -4,26 +4,43 @@
 
   export let name: string;
   export let placeholder: string;
-  export let type: HTMLInputTypeAttribute;
+  export let type: HTMLInputTypeAttribute | undefined = 'text';
   export let required: boolean;
   export let maxlength: number;
   export let minlength: number | undefined = 0;
 
   export let inputErrors: string[] | null;
+  export let textArea: boolean | undefined = false;
+  export let rows: number | undefined = 3;
 </script>
 
 <div class="input-container">
-  <label for={`${name}-input`} class="form-label">name</label>
-  <input
-    {name}
-    {placeholder}
-    {type}
-    id={`${name}-input`}
-    {required}
-    {minlength}
-    {maxlength}
-    class="form-input"
-  />
+  <label for={`${name}-input`} class="form-label">{name}</label>
+  {#if textArea}
+    <textarea
+      {name}
+      id={`${name}-input`}
+      {placeholder}
+      {required}
+      {minlength}
+      {maxlength}
+      {rows}
+      class="form-input"
+      spellcheck="false"
+    />
+  {/if}
+  {#if !textArea}
+    <input
+      {name}
+      {placeholder}
+      {type}
+      id={`${name}-input`}
+      {required}
+      {minlength}
+      {maxlength}
+      class="form-input"
+    />
+  {/if}
   {#if inputErrors}
     {#each inputErrors as inputError}
       <SubmitError>{inputError}</SubmitError>

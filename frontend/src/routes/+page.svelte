@@ -1,10 +1,28 @@
 <script lang="ts">
   import Modal from '$lib/components/Modal.svelte';
-  import MessageForm from '$lib/components/MessageForm.svelte';
   import { showModal } from '$lib/stores';
   import { PUBLIC_DATA_ROUTE } from '$env/static/public';
+  import Form from '$lib/components/Form.svelte';
+  import { messageSchema } from '$lib/schema/messageSchema.js';
 
   export let data;
+
+  const messageFields = [
+    {
+      name: 'message',
+      placeholder: 'your message',
+      required: true,
+      maxlength: 240,
+      textArea: true
+    },
+    {
+      name: 'sender',
+      placeholder: 'your name',
+      type: 'text',
+      required: true,
+      maxlength: 20
+    }
+  ];
 
   async function fetchNewMessage() {
     const response = await fetch(`${PUBLIC_DATA_ROUTE}/global-message`);
@@ -14,14 +32,19 @@
 
 <div class="content">
   <p class="greeting">
-    Your message by {data.message.senderName}:
+    Your message by {data.message.sender}:
   </p>
   <p class="message">
-    {data.message.content}
+    {data.message.message}
   </p>
   <button on:click={() => showModal.set('message', true)}>Share your own idea</button>
   <Modal modalType={'message'}>
-    <MessageForm />
+    <Form
+      fields={messageFields}
+      validationSchema={messageSchema}
+      actionRoute="?/send-message"
+      modalType="message"
+    />
   </Modal>
   <button on:click={() => fetchNewMessage()}>Get new Message</button>
 </div>

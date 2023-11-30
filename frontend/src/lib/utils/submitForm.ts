@@ -16,6 +16,7 @@ export async function submitForm(
 ) {
   const formData = await request.formData();
   const formJSON = JSON.stringify(Object.fromEntries(formData));
+  console.log(Object.fromEntries(formData));
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',

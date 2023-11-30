@@ -30,9 +30,9 @@ func IndexHandler(c *fiber.Ctx, db *sql.DB) error {
 
 	// valid if user is logged in
 	if sender.Valid {
-		message.Sender = int(sender.Int32)
+		message.SenderID = int(sender.Int32)
 	} else {
-		message.Sender = -1
+		message.SenderID = -1
 	}
 
 	// mark the message that is beeing sent to the user as has_been_read ✔️

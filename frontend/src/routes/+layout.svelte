@@ -1,17 +1,60 @@
 <script lang="ts">
-  import LoginForm from '$lib/components/LoginForm.svelte';
-  import SignupForm from '$lib/components/SignupForm.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import type { LayoutData } from './$types';
   import { showModal, user, token } from '$lib/stores';
   import Dropdown from '$lib/components/Dropdown.svelte';
-  import RenameForm from '$lib/components/RenameForm.svelte';
+  import Form from '$lib/components/Form.svelte';
+  import { loginSchema } from '$lib/schema/loginSchema';
+  import { signupSchema } from '$lib/schema/signupSchema';
+  import { renameSchema } from '$lib/schema/renameSchema';
 
   export let data: LayoutData;
   user.set(data.user);
   token.set(data.token);
 
   let showPopup = false;
+
+  const formFields = {
+    login: [
+      { name: 'username', placeholder: 'username', type: 'text', required: true, maxlength: 20 },
+      {
+        name: 'password',
+        placeholder: 'password',
+        type: 'password',
+        required: true,
+        maxlength: 50,
+        minlength: 8
+      }
+    ],
+    signup: [
+      { name: 'username', placeholder: 'username', type: 'text', required: true, maxlength: 20 },
+      {
+        name: 'password',
+        placeholder: 'password',
+        type: 'password',
+        required: true,
+        maxlength: 50,
+        minlength: 8
+      },
+      {
+        name: 'confirmation',
+        placeholder: 'confirm password',
+        type: 'password',
+        required: true,
+        maxlength: 50,
+        minlength: 8
+      }
+    ],
+    rename: [
+      {
+        name: 'username',
+        placeholder: 'new username',
+        type: 'text',
+        required: true,
+        maxlength: 20
+      }
+    ]
+  };
 
   function onClick(modalType: keyof typeof $showModal) {
     showModal.set(modalType, true);
@@ -24,11 +67,21 @@
       {#if !$user}
         <button on:click={() => onClick('login')}>Login</button>
         <Modal modalType={'login'}>
-          <LoginForm />
+          <Form
+            fields={formFields.login}
+            validationSchema={loginSchema}
+            actionRoute="?/login"
+            modalType="login"
+          />
         </Modal>
         <button on:click={() => onClick('signup')}>Signup</button>
         <Modal modalType={'signup'}>
-          <SignupForm />
+          <Form
+            fields={formFields.signup}
+            validationSchema={signupSchema}
+            actionRoute="?/signup"
+            modalType="signup"
+          />
         </Modal>
       {/if}
     </div>
@@ -43,7 +96,12 @@
     <Dropdown bind:showPopup />
   {/if}
   <Modal modalType={'namechange'}>
-    <RenameForm />
+    <Form
+      fields={formFields.rename}
+      validationSchema={renameSchema}
+      actionRoute="?/rename"
+      modalType="namechange"
+    />
   </Modal>
   <slot />
 </div>

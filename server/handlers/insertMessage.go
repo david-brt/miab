@@ -19,10 +19,10 @@ func InsertMessageHandler(c *fiber.Ctx, db *sql.DB) error {
 		                VALUES ($1, $2, $3, CURRENT_TIMESTAMP)`
 
 	var err error
-	if message.ID == 0 {
+	if message.SenderID == 0 {
 		_, err = db.Exec(messageStatement, message.Content, sql.NullString{}, message.SenderName)
 	} else {
-		_, err = db.Exec(messageStatement, message.Content, message.ID, message.SenderName)
+		_, err = db.Exec(messageStatement, message.Content, message.SenderID, message.SenderName)
 	}
 
 	if err != nil {
