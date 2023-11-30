@@ -21,8 +21,11 @@ export const actions: Actions = {
     return response;
   },
 
-  login: async ({ request }) => {
+  login: async ({ request, cookies }) => {
     const response = await submitForm(request, '/login', ACCEPTED);
+    if (response.token) {
+      cookies.set('auth_token', response.token);
+    }
     return response;
   },
 

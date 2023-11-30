@@ -16,7 +16,6 @@ export async function submitForm(
 ) {
   const formData = await request.formData();
   const formJSON = JSON.stringify(Object.fromEntries(formData));
-  console.log(Object.fromEntries(formData));
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -27,13 +26,14 @@ export async function submitForm(
     method: 'POST',
     mode: 'cors',
     headers: headers,
-    body: formJSON
+    body: formJSON,
+    credentials: 'include'
   });
 
   const responseData = await response.json();
 
   if (response.status === successStatus) {
-    return { success: true };
+    return responseData;
   }
 
   return fail(response.status, responseData);

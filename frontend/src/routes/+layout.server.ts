@@ -8,7 +8,8 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     mode: 'cors',
     headers: {
       Authorization: `Bearer ${tokenString}`
-    }
+    },
+    credentials: 'include'
   });
   if (response.ok) {
     const { claims } = await response.json();

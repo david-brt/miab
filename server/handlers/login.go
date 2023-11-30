@@ -23,7 +23,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 		return errors.TooManyRequestsError(c)
 	}
 
-	userID,err := dataaccess.GetUserId(db, user.Username)
+	userID, err := dataaccess.GetUserId(db, user.Username)
 	user.ID = userID
 
 	if !dataaccess.PasswordMatchesHash(db, &user) {
@@ -59,6 +59,7 @@ func LoginHandler(c *fiber.Ctx, db *sql.DB) error {
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 		"success": "true",
+		"token":   s,
 		"user": fiber.Map{
 			"id":   user.ID,
 			"name": user.Username,
