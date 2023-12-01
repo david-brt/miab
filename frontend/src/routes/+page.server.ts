@@ -1,6 +1,11 @@
 import { INTERNAL_DATA_ROUTE } from '$env/static/private';
 import type { LoadEvent } from '@sveltejs/kit';
 import type { Message } from '../../types/message';
+import type { Actions } from '@sveltejs/kit';
+import { submitForm } from '$lib/utils/submitForm';
+
+const CREATED = 201;
+const ACCEPTED = 202;
 
 export async function load({ fetch }: LoadEvent) {
   const response = await fetch(`${INTERNAL_DATA_ROUTE}/global-message`);
@@ -9,3 +14,29 @@ export async function load({ fetch }: LoadEvent) {
     message
   };
 }
+
+export const actions: Actions = {
+  signup: async ({ request }) => {
+    const response = await submitForm(request, '/signup', CREATED);
+    return response;
+  },
+
+  login: async ({ request, cookies }) => {
+    const response = await submitForm(request, '/login', ACCEPTED);
+    if (response.token) {
+      cookies.set('auth_token', response.token);
+    }
+    return response;
+  },
+
+  'send-message': async ({ request }) => {
+    const response = await submitForm(request, '/send-message', ACCEPTED);
+    return response;
+  },
+
+  rename: async ({ request, cookies }) => {
+    const token = cookies.get('auth_token');
+    const response = await submitForm(request, '/authorized/rename', ACCEPTED, token);
+    return response;
+  }
+};

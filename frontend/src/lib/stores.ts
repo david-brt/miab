@@ -21,6 +21,8 @@ type UserType = {
   name: string;
 };
 
+export const token: Writable<string | undefined> = writable()
+
 export const user: Writable<UserType | undefined> = writable();
 
 export const showModal = createShowModal();

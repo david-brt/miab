@@ -1,13 +1,14 @@
 <div class="submit-error">
-  <p>
+  <small>
     <strong>
       <slot />
     </strong>
-  </p>
+  </small>
 </div>
 
 <style>
   .submit-error {
+    font-size: 1.25em;
     color: var(--error-red);
     word-wrap: break-word;
   }
